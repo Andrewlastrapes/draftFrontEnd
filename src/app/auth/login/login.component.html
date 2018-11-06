@@ -1,0 +1,27 @@
+
+<div class="cardCon">
+  <div class="card text-white bg-info mb-3 moreCard">
+    <div class="card-header text-center">2019 Masters Draft</div>
+    <div class="card-body">
+      <h5 class="card-title">Login</h5>
+    <div class="forms">
+      <div class="input-group input-group-lg username">
+        <input type="text" class="form-control" placeholder="Username" [(ngModel)]="username">
+      </div>
+      <div class="input-group input-group-lg password">
+        <input type="password" class="form-control" placeholder="password" [(ngModel)]="password">
+      </div>
+      <div class="text-center buttonPad">
+      <button type="button" class="btn btn-primary btn-lg" (click)="loginUser(username, password)">Login</button>
+      <h1>{{validationMessage}}</h1>
+    </div>
+    </div>
+    </div>
+  </div>
+</div>
+
+<div id="intro" class="view">
+  <div class="full-bg-img">
+    
+  </div>
+</div>
