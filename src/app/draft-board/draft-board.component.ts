@@ -3,6 +3,7 @@ import { PostService } from "../services/post-service/post.service";
 import { GolfersService } from "../services/golfers-service/golfers.service";
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import {Router} from "@angular/router";
+import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -19,6 +20,8 @@ export class DraftBoardComponent implements OnInit {
   loadingFlag: boolean = true;
   counter: number;
   loggedOut: boolean=true;
+  user1:any;
+  testUsers: any[];
 
   @Output() passLogOut: EventEmitter<boolean> =   new EventEmitter();
 
@@ -26,58 +29,74 @@ export class DraftBoardComponent implements OnInit {
     public post: PostService,
     public golfSer: GolfersService,
     private spinner: Ng4LoadingSpinnerService,
-    private router: Router) {
+    private router: Router,
+    private actRoute: ActivatedRoute) {
     
+    // this.user1 = this.actRoute.snapshot.paramMap.get("id");
+
+    console.log(this.users);
+    console.log(this.testUsers);
+
     
+
+   
     
     this.spinner.show();
       
     this.counter = 60;
 
     this.users = [
-      {
-        name: "Andrew",
-        picks: [],
-        active: true
-      },
-      {
-        name: "Taylor",
-        picks: [],
-        active: false
-      },
-      {
-        name: "Thomas",
-        picks: [],
-        active: false
-      },
-      {
-        name: "Matt",
-        picks: [],
-        active: false
-      },
-      {
-        name: "Jimmy",
-        picks: [],
-        active: false
-      },
-      {
-        name: "James",
-        picks: [],
-        active: false
-      },
-      {
-        name: "Carl",
-        picks: [],
-        active: false
-      },
-      {
-        name: "Sid Bream",
-        picks: [],
-        active: false
-      }
+      // {
+      //   name: "Andrew",
+      //   picks: [],
+      //   active: true
+      // },
+    ]
+    this.users.push(
+      {name: this.actRoute.snapshot.paramMap.get("id"),
+       picks: [],
+       active: this.users.length < 2 ? true : false}
+    );
+    console.log(this.users)
+    
+      // {
+      //   name: "Taylor",
+      //   picks: [],
+      //   active: false
+      // },
+      // {
+      //   name: "Thomas",
+      //   picks: [],
+      //   active: false
+      // },
+      // {
+      //   name: "Matt",
+      //   picks: [],
+      //   active: false
+      // },
+      // {
+      //   name: "Jimmy",
+      //   picks: [],
+      //   active: false
+      // },
+      // {
+      //   name: "James",
+      //   picks: [],
+      //   active: false
+      // },
+      // {
+      //   name: "Carl",
+      //   picks: [],
+      //   active: false
+      // },
+      // {
+      //   name: "Sid Bream",
+      //   picks: [],
+      //   active: false
+      // }
 
 
-    ];
+    // ];
 
     if(this.users.length === 8){
       this.getGolfers()
