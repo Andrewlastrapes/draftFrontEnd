@@ -25,8 +25,9 @@ export class LoginComponent {
             console.log(this.validationMessage)
             return;
           }
+          console.log(res)
           this.validationMessage = res["message"]
-          this.router.navigate(["draft-board", {id: u}])
+          this.router.navigate(["draft-board", {id: res["user"]["username"]}])
         }
           
         )

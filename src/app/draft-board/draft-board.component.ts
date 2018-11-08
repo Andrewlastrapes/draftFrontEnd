@@ -4,6 +4,7 @@ import { GolfersService } from "../services/golfers-service/golfers.service";
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import {Router} from "@angular/router";
 import { ActivatedRoute } from '@angular/router';
+import * as socketIo from "socket.io-client";
 
 
 
@@ -32,28 +33,23 @@ export class DraftBoardComponent implements OnInit {
     private router: Router,
     private actRoute: ActivatedRoute) {
     
-    // this.user1 = this.actRoute.snapshot.paramMap.get("id");
-
-    console.log(this.users);
-    console.log(this.testUsers);
-
-    
-
-   
+    this.user1 = this.actRoute.snapshot.paramMap.get("id");
+    console.log(this.user1)
     
     this.spinner.show();
       
     this.counter = 60;
 
     this.users = [
-      // {
-      //   name: "Andrew",
-      //   picks: [],
-      //   active: true
-      // },
+      {
+        name: "andrew",
+        picks: [],
+        active: true
+      },
+      
     ]
     this.users.push(
-      {name: this.actRoute.snapshot.paramMap.get("id"),
+      {name: this.user1,
        picks: [],
        active: this.users.length < 2 ? true : false}
     );
@@ -98,9 +94,10 @@ export class DraftBoardComponent implements OnInit {
 
     // ];
 
-    if(this.users.length === 8){
-      this.getGolfers()
-    }
+    // if(this.users.length === 8){
+    //   this.getGolfers()
+    // }
+    this.getGolfers()
     
 
   }
@@ -210,6 +207,14 @@ export class DraftBoardComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    const socket = socketIo("http://localhost:3010");
+    
+      socket.on("news", (data) => {
+        console.log(data)
+    })
+
+      socket.emit("message", {data: "hi"})
 
     
   }
