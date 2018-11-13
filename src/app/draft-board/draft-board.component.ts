@@ -1,10 +1,11 @@
-import { Component, OnInit, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { PostService } from "../services/post-service/post.service";
 import { GolfersService } from "../services/golfers-service/golfers.service";
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
-import {Router} from "@angular/router";
+import { Router } from "@angular/router";
 import { ActivatedRoute } from '@angular/router';
 import * as socketIo from "socket.io-client";
+import { ActiveUsersService } from "../services/active-users-service/active-users.service";
 
 
 
@@ -16,93 +17,55 @@ import * as socketIo from "socket.io-client";
 export class DraftBoardComponent implements OnInit {
 
   golfers: any = {};
-  users: any[];
+  users: any = {};
   ascFlag: boolean = true;
   loadingFlag: boolean = true;
   counter: number;
-  loggedOut: boolean=true;
-  user1:any;
-  testUsers: any[];
+  loggedOut: boolean = true;
 
-  @Output() passLogOut: EventEmitter<boolean> =   new EventEmitter();
+
+  @Output() passLogOut: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     public post: PostService,
     public golfSer: GolfersService,
     private spinner: Ng4LoadingSpinnerService,
     private router: Router,
-    private actRoute: ActivatedRoute) {
-    
-    this.user1 = this.actRoute.snapshot.paramMap.get("id");
-    console.log(this.user1)
-    
+    private actRoute: ActivatedRoute,
+    private activeUsersSer: ActiveUsersService) {
+
     this.spinner.show();
-      
+
     this.counter = 60;
-
-    this.users = [
-      {
-        name: "andrew",
-        picks: [],
-        active: true
-      },
-      
-    ]
-    this.users.push(
-      {name: this.user1,
-       picks: [],
-       active: this.users.length < 2 ? true : false}
-    );
-    console.log(this.users)
-    
-      // {
-      //   name: "Taylor",
-      //   picks: [],
-      //   active: false
-      // },
-      // {
-      //   name: "Thomas",
-      //   picks: [],
-      //   active: false
-      // },
-      // {
-      //   name: "Matt",
-      //   picks: [],
-      //   active: false
-      // },
-      // {
-      //   name: "Jimmy",
-      //   picks: [],
-      //   active: false
-      // },
-      // {
-      //   name: "James",
-      //   picks: [],
-      //   active: false
-      // },
-      // {
-      //   name: "Carl",
-      //   picks: [],
-      //   active: false
-      // },
-      // {
-      //   name: "Sid Bream",
-      //   picks: [],
-      //   active: false
-      // }
-
-
-    // ];
 
     // if(this.users.length === 8){
     //   this.getGolfers()
     // }
     this.getGolfers()
-    
+    this.getActiveUsers()
+
 
   }
 
-  setCounter(){
+  getGolfers() {
+    this.golfSer.getGolfers()
+      .then(data => {
+        this.golfers = data
+        console.log(this.golfers)
+        this.spinner.hide()
+        this.setCounter()
+      })
+  }
+
+  getActiveUsers() {
+    this.activeUsersSer.getAllActiveUsers()
+      .then((data) => {
+        this.users = data["users"]
+        console.log(this.users)
+      })
+  }
+
+  setCounter() {
     // setInterval(() => {
     //   this.counter--
     //   if (this.counter === 0) {
@@ -111,26 +74,14 @@ export class DraftBoardComponent implements OnInit {
     // }, 1000);
   }
 
-  showUsers(u){
-    if(u.picks.length > 0){
+  showUsers(u) {
+    if (u.picks.length > 0) {
       return true;
     }
   }
 
-  signOut(){
+  signOut() {
     this.router.navigate([''])
-  }
-
-  getGolfers() {
-    this.golfSer.getGolfers()
-      .then(data => {
-        this.golfers = data
-        this.spinner.hide()
-        this.setCounter()
-      }
-
-      )
-
   }
 
 
@@ -209,14 +160,14 @@ export class DraftBoardComponent implements OnInit {
   ngOnInit() {
 
     const socket = socketIo("http://localhost:3010");
-    
-      socket.on("news", (data) => {
-        console.log(data)
+
+    socket.on("news", (data) => {
+      
     })
 
-      socket.emit("message", {data: "hi"})
+    socket.emit("message", { data: "hi" })
 
-    
+
   }
 
 
