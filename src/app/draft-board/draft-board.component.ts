@@ -6,6 +6,7 @@ import { Router } from "@angular/router";
 import { ActivatedRoute } from '@angular/router';
 import * as socketIo from "socket.io-client";
 import { ActiveUsersService } from "../services/active-users-service/active-users.service";
+import { LoginService } from "../services/login-service/login.service";
 
 
 
@@ -22,6 +23,7 @@ export class DraftBoardComponent implements OnInit {
   loadingFlag: boolean = true;
   counter: number;
   loggedOut: boolean = true;
+  currentUser: any;
 
 
   @Output() passLogOut: EventEmitter<boolean> = new EventEmitter();
@@ -32,7 +34,10 @@ export class DraftBoardComponent implements OnInit {
     private spinner: Ng4LoadingSpinnerService,
     private router: Router,
     private actRoute: ActivatedRoute,
-    private activeUsersSer: ActiveUsersService) {
+    private activeUsersSer: ActiveUsersService,
+    public loginSer: LoginService) {
+
+    this.currentUser = this.actRoute.snapshot.paramMap.get("id");
 
     this.spinner.show();
 
@@ -51,7 +56,6 @@ export class DraftBoardComponent implements OnInit {
     this.golfSer.getGolfers()
       .then(data => {
         this.golfers = data
-        console.log(this.golfers)
         this.spinner.hide()
         this.setCounter()
       })
@@ -81,7 +85,12 @@ export class DraftBoardComponent implements OnInit {
   }
 
   signOut() {
-    this.router.navigate([''])
+    this.loginSer.signOut(this.currentUser)
+    .then((data) => {
+      console.log(data);
+      this.router.navigate([''])
+    })
+    
   }
 
 
