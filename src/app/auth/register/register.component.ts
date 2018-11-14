@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { RegisterService } from "../../services/register-service/register.service";
 import { Router } from '@angular/router';
-import { LoginComponent } from "../login/login.component";
+
 
 @Component({
     selector: "app-register",
@@ -11,16 +11,35 @@ import { LoginComponent } from "../login/login.component";
 
 export class RegisterComponent{
 
+    registrationError: boolean=false;
+    errMessage: any;
+
     constructor(
         public registerServ: RegisterService,
         public router: Router){
 
+
     }
 
-    registerUser(username, password){
-        this.registerServ.registerUserService(username, password);
+    navToLogin(){
         this.router.navigate(["/login"]);
-        
+    }
+
+    registerUser(username, password, passwordConfirm){
+        if(passwordConfirm !== password){
+            this.registrationError = true;
+            this.errMessage = "Password and Password Confirmation do not match."
+            return;
+        }
+        this.registerServ.registerUserService(username, password)
+        .then((data) => {
+            if(data["err"]){
+                this.registrationError = true;
+                this.errMessage = data["err"]
+                return;
+            }
+            this.router.navigate(["/login"]);
+        });
     }
 
 }

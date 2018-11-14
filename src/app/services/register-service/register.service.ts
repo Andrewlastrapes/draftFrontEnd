@@ -10,7 +10,7 @@ export class RegisterService{
             username: username,
             password: password
         }
-        this.http.post("http://localhost:3010/user/register", userData).toPromise()
+       return this.http.post("http://localhost:3010/user/register", userData).toPromise()
     }
 
 }

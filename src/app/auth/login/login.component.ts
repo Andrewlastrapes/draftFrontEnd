@@ -11,7 +11,9 @@ export class LoginComponent {
     username: any;
     password: any;
     loggedIn: boolean = true;
-    validationMessage: any;
+    errMessage: any;
+    loginError: boolean=false;
+    successMessage: any;
 
     constructor(
         public router: Router,
@@ -19,14 +21,22 @@ export class LoginComponent {
 
 
     loginUser(u, p) {
+
+        if(!u || !p){
+            this.loginError = true;
+            this.errMessage = "Please type in username and password";
+            return;
+        }
+
         this.loginServ.login(u, p).then(res => {
           if(!res["token"]){
-            this.validationMessage = res
-            console.log(this.validationMessage)
+            this.loginError = true;
+            this.errMessage = res["message"]
+            console.log(this.errMessage)
             return;
           }
           console.log(res)
-          this.validationMessage = res["message"]
+          this.successMessage = res["message"]
           this.router.navigate(["draft-board", {id: res["user"]["username"]}])
         }
           

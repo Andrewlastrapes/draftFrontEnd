@@ -1,4 +1,8 @@
+
 <div class="cardCon">
+    <div (click)="navToLogin()">
+        <a><h5>Already registered? <span class="badge badge-secondary">Click</span></h5></a>
+      </div>
   <div class="card text-white bg-info mb-3 moreCard">
     <div class="card-header text-center">2019 Masters Draft</div>
     <div class="card-body">
@@ -11,10 +15,13 @@
         <input type="password" class="form-control" placeholder="Password" [(ngModel)]="password">
       </div>
       <div class="input-group input-group-lg password">
-          <input type="password" class="form-control" placeholder="Confirm Password" [(ngModel)]="password">
+          <input type="password" class="form-control" placeholder="Confirm Password" [(ngModel)]="passwordConfirm">
         </div>
       <div class="text-center buttonPad">
-      <button type="button" class="btn btn-primary btn-lg" (click)="registerUser(username, password)">Register</button>
+      <button type="button" class="btn btn-primary btn-lg" (click)="registerUser(username, password, passwordConfirm)">Submit</button>
+    </div>
+    <div *ngIf="registrationError" padding-top class="alert alert-danger" role="alert">
+      {{errMessage}}
     </div>
     </div>
     </div>

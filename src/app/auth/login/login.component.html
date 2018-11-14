@@ -13,7 +13,9 @@
       </div>
       <div class="text-center buttonPad">
       <button type="button" class="btn btn-primary btn-lg" (click)="loginUser(username, password)">Login</button>
-      <h1>{{validationMessage}}</h1>
+      <div *ngIf="loginError" padding-top class="alert alert-danger" role="alert">
+          {{errMessage}}
+        </div>
     </div>
     </div>
     </div>
