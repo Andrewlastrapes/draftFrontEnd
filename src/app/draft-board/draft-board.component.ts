@@ -24,6 +24,7 @@ export class DraftBoardComponent implements OnInit {
   counter: number;
   loggedOut: boolean = true;
   currentUser: any;
+  turn: any;
 
 
   @Output() passLogOut: EventEmitter<boolean> = new EventEmitter();
@@ -36,6 +37,7 @@ export class DraftBoardComponent implements OnInit {
     private actRoute: ActivatedRoute,
     private activeUsersSer: ActiveUsersService,
     public loginSer: LoginService) {
+
 
     this.currentUser = this.actRoute.snapshot.paramMap.get("id");
 
@@ -64,10 +66,14 @@ export class DraftBoardComponent implements OnInit {
   getActiveUsers() {
     this.activeUsersSer.getAllActiveUsers()
       .then((data) => {
-        this.users = data["users"]
-        console.log(this.users)
-      })
+          this.users = data["users"]
+          this.users[0]["active"] = true;
+          this.turn = this.users[0]["username"];
+
+        })
   }
+
+
 
   setCounter() {
     // setInterval(() => {
@@ -93,36 +99,31 @@ export class DraftBoardComponent implements OnInit {
     
   }
 
-
-  setActivation() {
-
-    for (var i = 0; i < this.users.length; i++) {
-      if (this.users[i].active) {
-        return this.users[i].name;
-      }
-    }
-  }
-  draftGolfer(g) {
+draftGolfer(g) {
 
     this.counter = 60;
 
     if (this.ascFlag) {
 
       for (var i = 0; i < this.users.length; i++) {
+        
         if (this.users[i].active) {
-          let activeUser = this.users[i].name
+          let activeUser = this.users[i].username
           this.users[i].picks.push(g);
           this.users[i].active = false;
+          console.log(this.users[i])
 
           this.post.postToDB(g, activeUser)
 
 
           if (i === this.users.length - 1) {
             this.users[this.users.length - 1].active = true;
+            this.turn = this.users[this.users.length - 1].username
             this.ascFlag = false;
             break;
           } else {
             this.users[i + 1].active = true;
+            this.turn = this.users[i + 1].username
             break;
           }
         }
@@ -131,7 +132,7 @@ export class DraftBoardComponent implements OnInit {
     } else if (!this.ascFlag) {
       for (var i = this.users.length - 1; i >= 0; i--) {
         if (this.users[i].active) {
-          let activeUser = this.users[i].name
+          let activeUser = this.users[i].username
           this.users[i].picks.push(g);
           this.post.postToDB(g, activeUser)
 
@@ -139,11 +140,13 @@ export class DraftBoardComponent implements OnInit {
           if (this.users[0].active === true) {
 
             this.users[0].active = true;
+            this.turn = this.users[0].username
             this.ascFlag = true;
             break;
           } else {
             this.users[i].active = false;
             this.users[i - 1].active = true;
+            this.turn = this.users[i - 1].username
             break;
           }
         }
