@@ -66,11 +66,11 @@ export class DraftBoardComponent implements OnInit {
   getActiveUsers() {
     this.activeUsersSer.getAllActiveUsers()
       .then((data) => {
-          this.users = data["users"]
-          this.users[0]["active"] = true;
-          this.turn = this.users[0]["username"];
+        this.users = data["users"]
+        this.users[0]["active"] = true;
+        this.turn = this.users[0]["username"];
 
-        })
+      })
   }
 
 
@@ -84,80 +84,118 @@ export class DraftBoardComponent implements OnInit {
     // }, 1000);
   }
 
-  showUsers(u) {
-    if (u.picks.length > 0) {
-      return true;
-    }
-  }
+  // showUsers(u) {
+  //   if (u.picks.length > 0) {
+  //     return true;
+  //   }
+  // }
 
   signOut() {
     this.loginSer.signOut(this.currentUser)
-    .then((data) => {
-      console.log(data);
-      this.router.navigate([''])
-    })
-    
+      .then((data) => {
+        console.log(data);
+        this.router.navigate([''])
+      })
+
   }
 
-draftGolfer(g) {
-
+  draftGolfer(g) {
+    
     this.counter = 60;
 
+    let index;
+
+    this.users.filter((u, i) => {
+      if (u.active) {
+        index = i;
+      }
+    });
+    console.log(index)
+    
+    // Ascending flag
+
     if (this.ascFlag) {
+      if (index === this.users.length - 1) {
+        console.log("in")
+        this.ascFlag = false
 
-      for (var i = 0; i < this.users.length; i++) {
-        
-        if (this.users[i].active) {
-          let activeUser = this.users[i].username
-          this.users[i].picks.push(g);
-          this.users[i].active = false;
-          console.log(this.users[i])
-
-          this.post.postToDB(g, activeUser)
-
-
-          if (i === this.users.length - 1) {
-            this.users[this.users.length - 1].active = true;
-            this.turn = this.users[this.users.length - 1].username
-            this.ascFlag = false;
-            break;
-          } else {
-            this.users[i + 1].active = true;
-            this.turn = this.users[i + 1].username
-            break;
-          }
+      } else {
+        this.users[index + 1].active = true;
+        this.users[index].active = false;
+      }
+      // Descending flag
+    } else {
+        if(index === 0){
+          this.ascFlag = true;
+        } else {
+          this.users[index - 1].active = true;
+          this.users[index].active = false;
         }
-
-      }
-    } else if (!this.ascFlag) {
-      for (var i = this.users.length - 1; i >= 0; i--) {
-        if (this.users[i].active) {
-          let activeUser = this.users[i].username
-          this.users[i].picks.push(g);
-          this.post.postToDB(g, activeUser)
-
-
-          if (this.users[0].active === true) {
-
-            this.users[0].active = true;
-            this.turn = this.users[0].username
-            this.ascFlag = true;
-            break;
-          } else {
-            this.users[i].active = false;
-            this.users[i - 1].active = true;
-            this.turn = this.users[i - 1].username
-            break;
-          }
-        }
-      }
+      
     }
+    console.log(this.users)
+    console.log(this.ascFlag)
 
-    for (var j = 0; j < this.golfers.length; j++) {
-      if (this.golfers[j] === g) {
-        this.golfers.splice(j, 1);
-      }
-    }
+    this.post.postToDB(g, this.users[index]);
+
+
+
+
+    // if (this.ascFlag) {
+
+    //   for (var i = 0; i < this.users.length; i++) {
+
+    //     if (this.users[i].active) {
+    //       let activeUser = this.users[i].username
+    //       this.users[i].picks.push(g);
+    //       this.users[i].active = false;
+    //       console.log(this.users[i])
+
+    //       this.post.postToDB(g, activeUser)
+
+
+    //       if (i === this.users.length - 1) {
+    //         this.users[this.users.length - 1].active = true;
+    //         this.turn = this.users[this.users.length - 1].username
+    //         this.ascFlag = false;
+    //         break;
+    //       } else {
+    //         this.users[i + 1].active = true;
+    //         this.turn = this.users[i + 1].username
+    //         break;
+    //       }
+    //     }
+
+    //   }
+    // } else if (!this.ascFlag) {
+    //   for (var i = this.users.length - 1; i >= 0; i--) {
+    //     if (this.users[i].active) {
+    //       let activeUser = this.users[i].username
+    //       this.users[i].picks.push(g);
+    //       this.post.postToDB(g, activeUser)
+
+
+    //       if (this.users[0].active === true) {
+
+    //         this.users[0].active = true;
+    //         this.turn = this.users[0].username
+    //         this.ascFlag = true;
+    //         break;
+    //       } else {
+    //         this.users[i].active = false;
+    //         this.users[i - 1].active = true;
+    //         this.turn = this.users[i - 1].username
+    //         break;
+    //       }
+    //     }
+    //   }
+    // }
+
+    // for (var j = 0; j < this.golfers.length; j++) {
+    //   if (this.golfers[j] === g) {
+    //     this.golfers.splice(j, 1);
+    //   }
+    // }
 
   }
 
@@ -174,7 +212,7 @@ draftGolfer(g) {
     const socket = socketIo("http://localhost:3010");
 
     socket.on("news", (data) => {
-      
+
     })
 
     socket.emit("message", { data: "hi" })
