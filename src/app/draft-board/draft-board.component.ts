@@ -25,6 +25,8 @@ export class DraftBoardComponent implements OnInit {
   loggedOut: boolean = true;
   currentUser: any;
   turn: any;
+  displayedGolfers: any = []
+
 
 
   @Output() passLogOut: EventEmitter<boolean> = new EventEmitter();
@@ -48,11 +50,11 @@ export class DraftBoardComponent implements OnInit {
     // if(this.users.length === 8){
     //   this.getGolfers()
     // }
-    this.getGolfers()
-    this.getActiveUsers()
-
-
+    this.getGolfers();
+    this.getActiveUsers();
+    
   }
+
 
   getGolfers() {
     this.golfSer.getGolfers()
@@ -61,11 +63,15 @@ export class DraftBoardComponent implements OnInit {
         this.spinner.hide()
         this.setCounter()
       })
+      .then((data) => {
+        this.initGolfers();
+      })
   }
 
   getActiveUsers() {
     this.activeUsersSer.getAllActiveUsers()
       .then((data) => {
+        console.log(data)
         this.users = data["users"]
         this.users[0]["active"] = true;
         this.turn = this.users[0]["username"];
@@ -73,7 +79,48 @@ export class DraftBoardComponent implements OnInit {
       })
   }
 
+  initGolfers(){
+    for(var i = 0; i < 26; i++){
+      this.displayedGolfers.push(this.golfers[i])
+    }
+  }
 
+  onPageChange(p){
+  switch (p) {
+    case 1:
+    this.pageSelectionLoop(0, 26);
+    break;
+    
+    case 2:
+    this.pageSelectionLoop(26, 51);
+    break;
+  
+    case 3:
+    this.pageSelectionLoop(51, 76);
+    break;
+
+    case 4:
+    this.pageSelectionLoop(76, 101);
+    break;  
+    
+    case 5:
+    this.pageSelectionLoop(101, 126);
+    break;
+
+    case 5:
+    this.pageSelectionLoop(126, 151);
+    break;
+  }
+  
+
+}
+
+  pageSelectionLoop(init, l){
+    this.displayedGolfers = []
+    for(var i = init; i < l; i++){
+      this.displayedGolfers.push(this.golfers[i])
+    }
+  }
 
   setCounter() {
     // setInterval(() => {
@@ -102,21 +149,17 @@ export class DraftBoardComponent implements OnInit {
   draftGolfer(g) {
     
     this.counter = 60;
-
     let index;
 
     this.users.filter((u, i) => {
       if (u.active) {
         index = i;
       }
-    });
-    console.log(index)
-    
+    });    
     // Ascending flag
 
     if (this.ascFlag) {
       if (index === this.users.length - 1) {
-        console.log("in")
         this.ascFlag = false
 
       } else {
@@ -133,69 +176,14 @@ export class DraftBoardComponent implements OnInit {
         }
       
     }
-    console.log(this.users)
-    console.log(this.ascFlag)
-
     this.post.postToDB(g, this.users[index]);
+    
 
-
-
-
-    // if (this.ascFlag) {
-
-    //   for (var i = 0; i < this.users.length; i++) {
-
-    //     if (this.users[i].active) {
-    //       let activeUser = this.users[i].username
-    //       this.users[i].picks.push(g);
-    //       this.users[i].active = false;
-    //       console.log(this.users[i])
-
-    //       this.post.postToDB(g, activeUser)
-
-
-    //       if (i === this.users.length - 1) {
-    //         this.users[this.users.length - 1].active = true;
-    //         this.turn = this.users[this.users.length - 1].username
-    //         this.ascFlag = false;
-    //         break;
-    //       } else {
-    //         this.users[i + 1].active = true;
-    //         this.turn = this.users[i + 1].username
-    //         break;
-    //       }
-    //     }
-
-    //   }
-    // } else if (!this.ascFlag) {
-    //   for (var i = this.users.length - 1; i >= 0; i--) {
-    //     if (this.users[i].active) {
-    //       let activeUser = this.users[i].username
-    //       this.users[i].picks.push(g);
-    //       this.post.postToDB(g, activeUser)
-
-
-    //       if (this.users[0].active === true) {
-
-    //         this.users[0].active = true;
-    //         this.turn = this.users[0].username
-    //         this.ascFlag = true;
-    //         break;
-    //       } else {
-    //         this.users[i].active = false;
-    //         this.users[i - 1].active = true;
-    //         this.turn = this.users[i - 1].username
-    //         break;
-    //       }
-    //     }
-    //   }
-    // }
-
-    // for (var j = 0; j < this.golfers.length; j++) {
-    //   if (this.golfers[j] === g) {
-    //     this.golfers.splice(j, 1);
-    //   }
-    // }
+    for (var j = 0; j < this.displayedGolfers.length; j++) {
+      if (this.displayedGolfers[j] === g) {
+        this.displayedGolfers.splice(j, 1);
+      }
+    }
 
   }
 
