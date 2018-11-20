@@ -131,11 +131,11 @@ export class DraftBoardComponent implements OnInit {
     // }, 1000);
   }
 
-  // showUsers(u) {
-  //   if (u.picks.length > 0) {
-  //     return true;
-  //   }
-  // }
+  showUsers(u) {
+    if (u.picks.length > 0) {
+      return true;
+    }
+  }
 
   signOut() {
     this.loginSer.signOut(this.currentUser)
@@ -147,32 +147,45 @@ export class DraftBoardComponent implements OnInit {
   }
 
   draftGolfer(g) {
-    
-    this.counter = 60;
+    const socket = socketIo("http://localhost:3010");
     let index;
-
+    let username;
+    
     this.users.filter((u, i) => {
       if (u.active) {
         index = i;
+        username = u.username
       }
-    });    
+    });   
+
+    if(username !== this.currentUser){
+      return;
+    }
+
+    this.counter = 60;
+    
     // Ascending flag
 
     if (this.ascFlag) {
       if (index === this.users.length - 1) {
-        this.ascFlag = false
+        this.ascFlag = false;
+        this.activeUser(this.users[index].username);
 
       } else {
         this.users[index + 1].active = true;
         this.users[index].active = false;
+        this.activeUser(this.users[index + 1].username)
+
       }
       // Descending flag
     } else {
         if(index === 0){
           this.ascFlag = true;
+          this.activeUser(this.users[index].username)
         } else {
           this.users[index - 1].active = true;
           this.users[index].active = false;
+          this.activeUser(this.users[index - 1].username)
         }
       
     }
@@ -185,8 +198,17 @@ export class DraftBoardComponent implements OnInit {
       }
     }
 
+    socket.emit("playerDrafted", 
+    {data: {
+      user: this.users[index],
+      golfer: g
+    }})
+
   }
 
+  activeUser(u){
+   this.turn = u
+  }
 
 
   draftComplete() {
@@ -200,11 +222,14 @@ export class DraftBoardComponent implements OnInit {
     const socket = socketIo("http://localhost:3010");
 
     socket.on("news", (data) => {
-
+      console.log(data["hello"] + ", Helllooo.....This is the news")
     })
 
-    socket.emit("message", { data: "hi" })
+    socket.emit("newConnection", { data: this.currentUser})
 
+    socket.on("p", (data) => {
+      console.log(data)
+    })
 
   }
 
