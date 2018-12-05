@@ -15,4 +15,8 @@ export class PostService {
      this.http.post("http://localhost:3010/post", payload).toPromise()
   }
 
+  getUsers(){
+    return this.http.get("http://localhost:3010/user/register").toPromise()
+  }
+
 }

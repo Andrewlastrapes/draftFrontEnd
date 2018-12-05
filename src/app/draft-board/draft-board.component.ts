@@ -133,6 +133,7 @@ export class DraftBoardComponent implements OnInit {
 
   showUsers(u) {
     if (u.picks.length > 0) {
+      console.log(u.picks)
       return true;
     }
   }
@@ -147,10 +148,11 @@ export class DraftBoardComponent implements OnInit {
   }
 
   draftGolfer(g) {
-    const socket = socketIo("http://localhost:3010");
+
     let index;
     let username;
     
+
     this.users.filter((u, i) => {
       if (u.active) {
         index = i;
@@ -158,9 +160,10 @@ export class DraftBoardComponent implements OnInit {
       }
     });   
 
-    if(username !== this.currentUser){
-      return;
-    }
+    // if(username !== this.currentUser){
+    //   return;
+    // }
+    
 
     this.counter = 60;
     
@@ -189,7 +192,21 @@ export class DraftBoardComponent implements OnInit {
         }
       
     }
+    console.log(this.users)
     this.post.postToDB(g, this.users[index]);
+    this.post.getUsers().then(data => {
+      for(let i = 0; i < data["data"].length; i++){
+        if(data["data"][i]["username"] === this.users[index].username){
+          this.users[index].picks = data["data"][i]["picks"];
+        }
+      }
+    });
+
+    const socket = socketIo("http://localhost:3010");
+    socket.emit("golfer-drafted", { data: 
+      {user: this.users[index],
+      golfer: g}
+    });
     
 
     for (var j = 0; j < this.displayedGolfers.length; j++) {
@@ -197,12 +214,6 @@ export class DraftBoardComponent implements OnInit {
         this.displayedGolfers.splice(j, 1);
       }
     }
-
-    socket.emit("playerDrafted", 
-    {data: {
-      user: this.users[index],
-      golfer: g
-    }})
 
   }
 
@@ -220,18 +231,8 @@ export class DraftBoardComponent implements OnInit {
   ngOnInit() {
 
     const socket = socketIo("http://localhost:3010");
-
-    socket.on("news", (data) => {
-      console.log(data["hello"] + ", Helllooo.....This is the news")
-    })
-
-    socket.emit("newConnection", { data: this.currentUser})
-
-    socket.on("p", (data) => {
-      console.log(data)
-    })
+    socket.emit("newConnection", { data: this.currentUser});
 
   }
-
 
 }

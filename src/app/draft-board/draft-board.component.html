@@ -11,8 +11,6 @@
 <div class="container">
 
 <div *ngIf="!draftComplete()">
-    
-  
 
     <div class="row">
     <div class="col-8">
@@ -32,6 +30,7 @@
         </div>
         <!-- <div *ngIf="loadingFlag"><h1>{{showSpinner()}}</h1></div> -->
          <ng4-loading-spinner></ng4-loading-spinner>
+         
         <ul class="list-group" *ngFor="let g of displayedGolfers; let i = index" (click)="draftGolfer(g)">
           <li class="list-group-item">
             <div class="row">
