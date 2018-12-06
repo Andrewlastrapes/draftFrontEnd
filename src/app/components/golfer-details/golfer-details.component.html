@@ -1,0 +1,31 @@
+
+<div class="page-header list-group-item active">
+  <div class="row">
+    <div class="col-9">
+      <h1><small>Turn: </small>{{turn}}</h1>
+    </div>
+    <div class="col-3">
+      <h1 *ngIf="counter > 59">1:00</h1>
+      <div *ngIf="counter < 60">
+        <h1 [ngClass]="{'danger': counter < 11}">:{{counter}}</h1>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ul class="list-group" *ngFor="let g of displayedGolfers; let i = index" (click)="draftGolfer(g)">
+  <li class="list-group-item">
+    <div class="row">
+      <div class="col-6">
+        <h6>{{g.Name}}</h6>
+      </div>
+      <div class="col-3">
+        <small>Rank: {{g.WorldGolfRank}}</small>
+      </div>
+      <div class="col-3">
+        <small>Events: {{g.Events}}</small>
+      </div>
+    </div>
+
+  </li>
+</ul>

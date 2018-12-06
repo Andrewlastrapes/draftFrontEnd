@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from "@angular/forms";
 
 import { AppComponent } from './app.component';
-import { DraftBoardComponent } from '../app/draft-board/draft-board.component';
+import { DraftBoardComponent } from './components/draft-board/draft-board.component';
 import { PostService } from "./services/post-service/post.service"
 import { GolfersService } from "./services/golfers-service/golfers.service"
 import { HttpClientModule } from '@angular/common/http';
@@ -15,6 +15,8 @@ import { LoginService } from '../app/services/login-service/login.service';
 import { LoginComponent } from "./auth/login/login.component";
 import { RegisterComponent } from "./auth/register/register.component";
 import { RegisterService } from "./services/register-service/register.service";
+import { UserDetailsComponent } from "./components/user-details/user-details.component";
+import { GolferDetailsComponent } from './components/golfer-details/golfer-details.component';
 
 
 
@@ -28,7 +30,9 @@ import { RegisterService } from "./services/register-service/register.service";
     LoginComponent,
     DraftBoardComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    UserDetailsComponent,
+    GolferDetailsComponent
 
   ],
   imports: [

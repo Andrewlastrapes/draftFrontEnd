@@ -30,7 +30,7 @@
     <div class="row">
     <div class="col-8">
       <div class="list-group">
-        <div class="page-header list-group-item active">
+        <!-- <div class="page-header list-group-item active">
           <div class="row">
             <div class="col-9">
               <h1><small>Turn: </small>{{turn}}</h1>
@@ -42,11 +42,10 @@
               </div>
             </div>
           </div>
-        </div>
-        <!-- <div *ngIf="loadingFlag"><h1>{{showSpinner()}}</h1></div> -->
+        </div> -->
          <ng4-loading-spinner></ng4-loading-spinner>
          
-        <ul class="list-group" *ngFor="let g of displayedGolfers; let i = index" (click)="draftGolfer(g)">
+        <!-- <ul class="list-group" *ngFor="let g of displayedGolfers; let i = index" (click)="draftGolfer(g)">
           <li class="list-group-item">
             <div class="row">
               <div class="col-6">
@@ -61,18 +60,12 @@
             </div>
 
           </li>
-        </ul>
+        </ul> -->
+        <app-golfer-details [users]="users" [turn]="turn" [displayedGolfers]="displayedGolfers"></app-golfer-details>
       </div>
     </div>
     <div class="col-4">
-      <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0" *ngFor="let u of users">
-        <ngb-panel [ngClass]="{'activeTurn': u.active}" title="{{u.username}}" [disabled]="!showUsers(u)">
-          <ng-template ngbPanelContent>
-            <p *ngFor="let p of u.picks"><small>{{p.WorldGolfRank}}:</small> {{p.Name}}</p>
-          </ng-template>
-        </ngb-panel>
-      </ngb-accordion>
-
+      <app-user-details [users]="users"></app-user-details>
     </div>
   </div>
   <div *ngIf="draftComplete()">
