@@ -1,5 +1,4 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { PostService } from "../../services/post-service/post.service";
 import { GolfersService } from "../../services/golfers-service/golfers.service";
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { Router } from "@angular/router";
@@ -46,22 +45,51 @@ export class DraftBoardComponent implements OnInit {
     // if(this.users.length === 8){
     //   this.getGolfers()
     // }
-    this.getGolfers();
+    // this.getGolfersFromDB()
+    this.getGolfersFromDB()
     this.getActiveUsers();
 
+  }
+
+  getGolfersFromDB() {
+    this.golfSer.returnGolfers()
+      .then(data => {
+        console.log(data)
+        if (data["data"].length === 0) {
+          console.log(data)
+          this.getGolfers()
+        } else {
+          this.golfers = data["data"]
+          console.log(this.golfers)
+          this.spinner.hide()
+          this.setCounter()
+          this.initGolfers()
+        }
+      })
   }
 
 
   getGolfers() {
     this.golfSer.getGolfers()
       .then(data => {
-        this.golfers = data
+        console.log(data)
+        let golfers = []
+        for (let i = 0; i < 200; i++) {
+          golfers.push(data[i])
+        }
+        this.postToGolfersDB(golfers)
+        this.golfers = golfers
         this.spinner.hide()
         this.setCounter()
       })
       .then((data) => {
         this.initGolfers();
       })
+  }
+
+
+  postToGolfersDB(data) {
+    this.golfSer.postGolfers(data)
   }
 
 
@@ -78,7 +106,6 @@ export class DraftBoardComponent implements OnInit {
   getActiveUsers() {
     this.activeUsersSer.getAllActiveUsers()
       .then((data) => {
-        console.log(data)
         this.users = data["users"]
         this.users[0]["active"] = true;
         this.turn = this.users[0]["username"];
@@ -124,7 +151,7 @@ export class DraftBoardComponent implements OnInit {
 
   pageSelectionLoop(init, l) {
     this.displayedGolfers = []
-    for (var i = init; i < l; i++) {
+    for (let i = init; i < l; i++) {
       this.displayedGolfers.push(this.golfers[i])
     }
   }

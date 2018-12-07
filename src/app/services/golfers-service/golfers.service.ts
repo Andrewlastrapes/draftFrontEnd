@@ -26,4 +26,20 @@ export class GolfersService {
   }
 
 
+  postGolfers(golfers){
+    console.log(golfers)
+    this.http.post("http://localhost:3010/golfers/post", golfers).toPromise()
+  }
+
+  returnGolfers(){
+    return this.http.get("http://localhost:3010/golfers/post").toPromise()
+  }
+
+  removeDraftedGolfer(golfer){
+    console.log(golfer)
+    return this.http.post("http://localhost:3010/golfers/remove-drafted", golfer).toPromise();
+  }
+
+
+
 }

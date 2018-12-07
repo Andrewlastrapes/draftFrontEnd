@@ -1,80 +1,48 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light navbar">
-    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Logout</a>
-            </li>
-        </ul>
-    </div>
-  </nav>
+  <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="#">About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
 <div class="jumbotron jumbotron-fluid">
   <div class="container ">
-        <h1 class="display-4 ">2019 Masters Draft</h1>
-        <p class="lead">The draft will begin when the 8th user logs in.</p>
-    
+    <h1 class="display-4 ">2019 Masters Draft</h1>
+    <p class="lead">The draft will begin when the 8th user logs in.</p>
 
-         <!-- <img class="imgHeight .img-fluid. max-width: 100%;" src="../assets/images/Augusta-Featured.jpg"> -->
-    
-    </div>
-    
+
+    <!-- <img class="imgHeight .img-fluid. max-width: 100%;" src="../assets/images/Augusta-Featured.jpg"> -->
+
+  </div>
+
 </div>
 
 
 <div class="container">
-
-<div *ngIf="!draftComplete()">
-
+  <div *ngIf="!draftComplete()">
     <div class="row">
-    <div class="col-8">
-      <div class="list-group">
-        <!-- <div class="page-header list-group-item active">
-          <div class="row">
-            <div class="col-9">
-              <h1><small>Turn: </small>{{turn}}</h1>
-            </div>
-            <div class="col-3">
-              <h1 *ngIf="counter > 59">1:00</h1>
-              <div *ngIf="counter < 60">
-                <h1 [ngClass]="{'danger': counter < 11}">:{{counter}}</h1>
-              </div>
-            </div>
-          </div>
-        </div> -->
-         <ng4-loading-spinner></ng4-loading-spinner>
-         
-        <!-- <ul class="list-group" *ngFor="let g of displayedGolfers; let i = index" (click)="draftGolfer(g)">
-          <li class="list-group-item">
-            <div class="row">
-              <div class="col-6">
-                <h6>{{g.Name}}</h6>
-              </div>
-              <div class="col-3">
-                <small>Rank: {{g.WorldGolfRank}}</small>
-              </div>
-              <div class="col-3">
-                <small>Events: {{g.Events}}</small>
-              </div>
-            </div>
-
-          </li>
-        </ul> -->
-        <app-golfer-details [users]="users" [turn]="turn" [displayedGolfers]="displayedGolfers"></app-golfer-details>
+      <div class="col-8">
+        <div class="list-group">
+          <ng4-loading-spinner></ng4-loading-spinner>
+          <app-golfer-details [users]="users" [turn]="turn" [displayedGolfers]="displayedGolfers" [currentUser]="currentUser"></app-golfer-details>
+        </div>
+      </div>
+      <div class="col-4">
+          <app-user-details [users]="users"></app-user-details>
       </div>
     </div>
-    <div class="col-4">
-      <app-user-details [users]="users"></app-user-details>
+    <div *ngIf="draftComplete()">
+      <div class="page-header list-group-item active">
+        <h1> Thank you</h1>
+      </div>
+      <div class="alert alert-success">Draft Complete</div>
     </div>
+    <ngb-pagination [collectionSize]="125" pageSize="25" [(page)]="page" aria-label="Default pagination" (pageChange)="onPageChange($event)"
+      [directionLinks]="true" [boundaryLinks]="true"></ngb-pagination>
   </div>
-  <div *ngIf="draftComplete()">
-    <div class="page-header list-group-item active">
-      <h1> Thank you</h1>
-    </div>
-
-    <div class="alert alert-success">Draft Complete</div>
-  </div>
-  <ngb-pagination [collectionSize]="125" pageSize="25"[(page)]="page" aria-label="Default pagination" (pageChange)="onPageChange($event)" [directionLinks]="true" [boundaryLinks]="true"></ngb-pagination>
-</div>
 </div>
