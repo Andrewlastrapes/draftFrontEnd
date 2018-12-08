@@ -45,7 +45,6 @@ export class DraftBoardComponent implements OnInit {
     // if(this.users.length === 8){
     //   this.getGolfers()
     // }
-    // this.getGolfersFromDB()
     this.getGolfersFromDB()
     this.getActiveUsers();
 
@@ -54,13 +53,10 @@ export class DraftBoardComponent implements OnInit {
   getGolfersFromDB() {
     this.golfSer.returnGolfers()
       .then(data => {
-        console.log(data)
-        if (data["data"].length === 0) {
-          console.log(data)
+        if (!data["data"].length) {
           this.getGolfers()
         } else {
           this.golfers = data["data"]
-          console.log(this.golfers)
           this.spinner.hide()
           this.setCounter()
           this.initGolfers()
@@ -72,7 +68,6 @@ export class DraftBoardComponent implements OnInit {
   getGolfers() {
     this.golfSer.getGolfers()
       .then(data => {
-        console.log(data)
         let golfers = []
         for (let i = 0; i < 200; i++) {
           golfers.push(data[i])
@@ -159,7 +154,6 @@ export class DraftBoardComponent implements OnInit {
   signOut() {
     this.loginSer.signOut(this.currentUser)
       .then((data) => {
-        console.log(data);
         this.router.navigate([''])
       })
 

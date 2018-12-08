@@ -4,6 +4,7 @@ import { DraftBoardComponent } from "./components/draft-board/draft-board.compon
 
 import { LoginComponent } from "./auth/login/login.component";
 import { RegisterComponent } from "./auth/register/register.component";
+import { WarningModalComponent } from './components/warning-modal/warning-modal.component';
 
 
 
@@ -20,6 +21,10 @@ const routes: Routes = [
   {
     path: "",
     component: RegisterComponent
+  },
+  {
+    path: "warning-modal",
+    component: WarningModalComponent
   }
 
 ];

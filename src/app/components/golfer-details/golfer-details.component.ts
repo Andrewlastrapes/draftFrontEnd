@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { PostService } from "../../services/post-service/post.service";
 import { GolfersService } from "../../services/golfers-service/golfers.service";
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { WarningModalComponent } from "../warning-modal/warning-modal.component";
 
 @Component({
   selector: 'app-golfer-details',
@@ -21,7 +23,9 @@ export class GolferDetailsComponent implements OnInit {
 
   constructor(
     public post: PostService,
-    public golfSer: GolfersService) {
+    public golfSer: GolfersService,
+    private modalService: NgbModal) {
+    
     this.counter = 60;
     
   }
@@ -33,23 +37,23 @@ export class GolferDetailsComponent implements OnInit {
 
 
   draftGolfer(g) {
-
+    
     let index;
     let username;
 
-
+    const modalRef = this.modalService.open(WarningModalComponent)
+    modalRef.componentInstance.name = g.Name;
+    console.log(modalRef.result)
+    
     this.users.filter((u, i) => {
       if (u.active) {
         index = i;
         username = u.username
       }
     });
-
     if(username !== this.currentUser){
       return;
     }
-
-
     this.counter = 60;
 
     // Ascending flag
@@ -77,15 +81,15 @@ export class GolferDetailsComponent implements OnInit {
       }
 
     }
-    this.post.postToDB(g, this.users[index]);
-    this.golfSer.removeDraftedGolfer(g)
-    this.post.getUsers().then(data => {
-      for (let i = 0; i < data["data"].length; i++) {
-        if (data["data"][i]["username"] === this.users[index].username) {
-          this.users[index].picks = data["data"][i]["picks"];
+      this.post.postToDB(g, this.users[index]);
+      this.golfSer.removeDraftedGolfer(g)
+      this.post.getUsers().then(data => {
+        for (let i = 0; i < data["data"].length; i++) {
+          if (data["data"][i]["username"] === this.users[index].username) {
+            this.users[index].picks = data["data"][i]["picks"];
+          }
         }
-      }
-    });
+      });
 
   }
 

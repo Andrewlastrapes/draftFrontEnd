@@ -17,6 +17,7 @@ import { RegisterComponent } from "./auth/register/register.component";
 import { RegisterService } from "./services/register-service/register.service";
 import { UserDetailsComponent } from "./components/user-details/user-details.component";
 import { GolferDetailsComponent } from './components/golfer-details/golfer-details.component';
+import { WarningModalComponent } from './components/warning-modal/warning-modal.component';
 
 
 
@@ -32,7 +33,8 @@ import { GolferDetailsComponent } from './components/golfer-details/golfer-detai
     LoginComponent,
     RegisterComponent,
     UserDetailsComponent,
-    GolferDetailsComponent
+    GolferDetailsComponent,
+    WarningModalComponent
 
   ],
   imports: [
