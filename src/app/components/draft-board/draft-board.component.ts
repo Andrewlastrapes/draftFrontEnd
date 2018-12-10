@@ -24,10 +24,6 @@ export class DraftBoardComponent implements OnInit {
   turn: any;
   displayedGolfers: any = []
 
-
-
-  @Output() passLogOut: EventEmitter<boolean> = new EventEmitter();
-
   constructor(
 
     public golfSer: GolfersService,
@@ -41,12 +37,6 @@ export class DraftBoardComponent implements OnInit {
     this.currentUser = this.actRoute.snapshot.paramMap.get("id");
 
     this.spinner.show();
-
-    // if(this.users.length === 8){
-    //   this.getGolfers()
-    // }
-    this.getGolfersFromDB()
-    this.getActiveUsers();
 
   }
 
@@ -166,6 +156,13 @@ export class DraftBoardComponent implements OnInit {
   }
 
   ngOnInit() {
+
+     // if(this.users.length === 8){
+    //   this.getGolfers()
+    // }
+
+    this.getGolfersFromDB();
+    this.getActiveUsers();
 
     const socket = socketIo("http://localhost:3010");
     socket.emit("newConnection", { data: this.currentUser });
