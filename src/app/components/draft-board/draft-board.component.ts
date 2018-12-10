@@ -35,6 +35,8 @@ export class DraftBoardComponent implements OnInit {
 
   }
 
+  // Get golfers from Database. 
+
   getGolfersFromDB() {
     this.golfSer.returnGolfers()
       .then(data => {
@@ -49,7 +51,8 @@ export class DraftBoardComponent implements OnInit {
       })
   }
 
-
+  // Get golfers from API and store to Database
+  
   getGolfers() {
     this.golfSer.getGolfers()
       .then(data => {
