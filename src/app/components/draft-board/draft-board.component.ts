@@ -33,11 +33,6 @@ export class DraftBoardComponent implements OnInit {
     private activeUsersSer: ActiveUsersService,
     public loginSer: LoginService) {
 
-
-    this.currentUser = this.actRoute.snapshot.paramMap.get("id");
-
-    this.spinner.show();
-
   }
 
   getGolfersFromDB() {
@@ -157,11 +152,14 @@ export class DraftBoardComponent implements OnInit {
 
   ngOnInit() {
 
-     // if(this.users.length === 8){
+    this.currentUser = this.actRoute.snapshot.paramMap.get("id");
+
+    this.spinner.show();
+
+    // if(this.users.length === 8){
     //   this.getGolfers()
     // }
-
-    this.getGolfersFromDB();
+    this.getGolfersFromDB()
     this.getActiveUsers();
 
     const socket = socketIo("http://localhost:3010");
