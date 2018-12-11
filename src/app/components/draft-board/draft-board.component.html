@@ -12,14 +12,22 @@
 </nav>
 <div class="jumbotron jumbotron-fluid">
   <div class="container ">
-    <h1 class="display-4 ">2019 Masters Draft</h1>
-    <p class="lead">The draft will begin when the 8th user logs in.</p>
+    <div class="row">
+      <div class="col-6">
+          <h1 class="display-4 ">2019 Masters Draft</h1>
+          <p class="lead">The draft will begin when the 8th user logs in.</p>
+      </div>
+      <div class="col-6">
+          <div *ngIf="showMessage">
+              <app-message></app-message>
+            </div>
+      </div>
+    </div>
 
 
+   
     <!-- <img class="imgHeight .img-fluid. max-width: 100%;" src="../assets/images/Augusta-Featured.jpg"> -->
-
   </div>
-
 </div>
 
 
@@ -29,11 +37,11 @@
       <div class="col-8">
         <div class="list-group">
           <ng4-loading-spinner></ng4-loading-spinner>
-          <app-golfer-details [users]="users" [turn]="turn" [displayedGolfers]="displayedGolfers" [currentUser]="currentUser"></app-golfer-details>
+          <app-golfer-details (draftMessage)="onDraftGolfer($event)" [users]="users" [turn]="turn" [displayedGolfers]="displayedGolfers" [currentUser]="currentUser"></app-golfer-details>
         </div>
       </div>
       <div class="col-4">
-          <app-user-details [users]="users"></app-user-details>
+        <app-user-details [users]="users"></app-user-details>
       </div>
     </div>
     <div *ngIf="draftComplete()">

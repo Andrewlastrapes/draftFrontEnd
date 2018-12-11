@@ -18,6 +18,7 @@ import { RegisterService } from "./services/register-service/register.service";
 import { UserDetailsComponent } from "./components/user-details/user-details.component";
 import { GolferDetailsComponent } from './components/golfer-details/golfer-details.component';
 import { WarningModalComponent } from './components/warning-modal/warning-modal.component';
+import { MessageComponent } from './components/message/message.component';
 
 
 
@@ -34,7 +35,8 @@ import { WarningModalComponent } from './components/warning-modal/warning-modal.
     RegisterComponent,
     UserDetailsComponent,
     GolferDetailsComponent,
-    WarningModalComponent
+    WarningModalComponent,
+    MessageComponent
 
   ],
   imports: [

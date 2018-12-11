@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PostService } from "../../services/post-service/post.service";
 import { GolfersService } from "../../services/golfers-service/golfers.service";
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -18,6 +18,7 @@ export class GolferDetailsComponent implements OnInit {
   @Input() turn;
   @Input() displayedGolfers;
   @Input() currentUser;
+  @Output() draftMessage = new EventEmitter<object>();
 
 
 
@@ -41,9 +42,9 @@ export class GolferDetailsComponent implements OnInit {
     let index;
     let username;
 
-    const modalRef = this.modalService.open(WarningModalComponent)
-    modalRef.componentInstance.name = g.Name;
-    console.log(modalRef.result)
+    // const modalRef = this.modalService.open(WarningModalComponent)
+    // modalRef.componentInstance.name = g.Name;
+    // console.log(modalRef.result)
     
     this.users.filter((u, i) => {
       if (u.active) {
@@ -51,9 +52,9 @@ export class GolferDetailsComponent implements OnInit {
         username = u.username
       }
     });
-    if(username !== this.currentUser){
-      return;
-    }
+    // if(username !== this.currentUser){
+    //   return;
+    // }
     this.counter = 60;
 
     // Ascending flag
@@ -81,6 +82,11 @@ export class GolferDetailsComponent implements OnInit {
       }
 
     }
+      let golfDraftObj = {
+        golfer: g,
+        user: this.users[index]
+      }
+      this.draftMessage.emit(golfDraftObj)
       this.post.postToDB(g, this.users[index]);
       this.golfSer.removeDraftedGolfer(g)
       this.post.getUsers().then(data => {

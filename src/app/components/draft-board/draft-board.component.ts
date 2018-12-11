@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import * as socketIo from "socket.io-client";
 import { ActiveUsersService } from "../../services/active-users-service/active-users.service";
 import { LoginService } from "../../services/login-service/login.service";
+import { MessageService } from "../../services/message-service/message.service"
 
 
 
@@ -23,6 +24,7 @@ export class DraftBoardComponent implements OnInit {
   currentUser: any;
   turn: any;
   displayedGolfers: any = []
+  showMessage: boolean = false
 
   constructor(
 
@@ -31,7 +33,8 @@ export class DraftBoardComponent implements OnInit {
     private router: Router,
     private actRoute: ActivatedRoute,
     private activeUsersSer: ActiveUsersService,
-    public loginSer: LoginService) {
+    public loginSer: LoginService,
+    private messageService: MessageService) {
 
   }
 
@@ -75,6 +78,14 @@ export class DraftBoardComponent implements OnInit {
     this.golfSer.postGolfers(data)
   }
 
+  onDraftGolfer(e){
+    this.messageService.draftGolferMessage(e);
+    this.showMessage = true;
+    setInterval(() => {
+      this.showMessage = false
+    }, 3000)
+  }
+
 
   setCounter() {
     // setInterval(() => {
@@ -88,7 +99,7 @@ export class DraftBoardComponent implements OnInit {
 
   getActiveUsers() {
     this.activeUsersSer.getAllActiveUsers()
-      .then((data) => {
+      .subscribe((data) => {
         this.users = data["users"]
         this.users[0]["active"] = true;
         this.turn = this.users[0]["username"];
