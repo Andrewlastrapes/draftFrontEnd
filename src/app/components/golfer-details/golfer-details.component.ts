@@ -89,11 +89,7 @@ export class GolferDetailsComponent implements OnInit {
      // if(username !== this.currentUser){
     //   return;
     // }
-
-
-    
     let userIndex;
-    let golferIndex;
     let username;
 
     // const modalRef = this.modalService.open(WarningModalComponent)
@@ -106,12 +102,23 @@ export class GolferDetailsComponent implements OnInit {
         username = u.username
       }
     });
-    this.displayedGolfers.filter((u, i) => {
+    
+    
+    this.golfers.filter((u, i) => {
+      let golferIndex;
       if (g === u) {
+        golferIndex = i;
+        this.golfers.splice(golferIndex, 1)
+  
+      }
+    });
+    this.displayedGolfers.filter((u, i) => {
+      let golferIndex;
+      if(g === u){
         golferIndex = i;
         this.displayedGolfers.splice(golferIndex, 1)
       }
-    });
+    })
 
 
    

@@ -64,6 +64,8 @@ export class DraftBoardComponent implements OnInit {
   ngOnInit() {
 
     this.currentUser = this.actRoute.snapshot.paramMap.get("id");
+    this.messageService.userSignedInMessage(this.currentUser)
+    this.showMessage = true;
     this.getActiveUsers();
     
     const socket = socketIo("http://localhost:3010");
