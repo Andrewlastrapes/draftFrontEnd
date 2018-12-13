@@ -8,13 +8,18 @@ export class MessageService {
   messages: any = [];
 
   constructor() { 
-    console.log(this.messages)
+  
   }
 
   draftGolferMessage(obj){
     let user = obj["user"]["username"];
     let golfer = obj["golfer"]["Name"];
     this.messages.push(`${user} has selected ${golfer}`)
+
+    if(this.messages.length === 3){
+      this.messages.splice(0, 1)
+    }
+
   }
 
 }

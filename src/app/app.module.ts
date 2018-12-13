@@ -19,7 +19,7 @@ import { UserDetailsComponent } from "./components/user-details/user-details.com
 import { GolferDetailsComponent } from './components/golfer-details/golfer-details.component';
 import { WarningModalComponent } from './components/warning-modal/warning-modal.component';
 import { MessageComponent } from './components/message/message.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 
@@ -45,7 +45,8 @@ import { MessageComponent } from './components/message/message.component';
     AppRoutingModule,
     FormsModule,
     NgbModule.forRoot(),
-    Ng4LoadingSpinnerModule.forRoot()
+    Ng4LoadingSpinnerModule.forRoot(),
+    BrowserAnimationsModule
   ],
   providers: [PostService, GolfersService, LoginService, RegisterService],
   bootstrap: [AppComponent]

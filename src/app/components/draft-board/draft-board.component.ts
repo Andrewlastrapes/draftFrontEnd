@@ -1,25 +1,23 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { GolfersService } from "../../services/golfers-service/golfers.service";
-import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { Router } from "@angular/router";
 import { ActivatedRoute } from '@angular/router';
 import * as socketIo from "socket.io-client";
 import { ActiveUsersService } from "../../services/active-users-service/active-users.service";
 import { LoginService } from "../../services/login-service/login.service";
-import { MessageService } from "../../services/message-service/message.service"
+import { MessageService } from "../../services/message-service/message.service";
 
 
 
 @Component({
   selector: 'app-draft-board',
   templateUrl: './draft-board.component.html',
-  styleUrls: ['./draft-board.component.scss']
+  styleUrls: ['./draft-board.component.scss'],
 })
 export class DraftBoardComponent implements OnInit {
 
-  golfers: any = {};
   users: any = {};
-  loadingFlag: boolean = true;
+
   loggedOut: boolean = true;
   currentUser: any;
   turn: any;
@@ -29,7 +27,6 @@ export class DraftBoardComponent implements OnInit {
   constructor(
 
     public golfSer: GolfersService,
-    private spinner: Ng4LoadingSpinnerService,
     private router: Router,
     private actRoute: ActivatedRoute,
     private activeUsersSer: ActiveUsersService,
@@ -38,62 +35,9 @@ export class DraftBoardComponent implements OnInit {
 
   }
 
-  // Get golfers from Database. 
-
-  getGolfersFromDB() {
-    this.golfSer.returnGolfers()
-      .then(data => {
-        if (!data["data"].length) {
-          this.getGolfers()
-        } else {
-          this.golfers = data["data"]
-          this.spinner.hide()
-          this.setCounter()
-          this.initGolfers()
-        }
-      })
-  }
-
-  // Get golfers from API and store to Database
-  
-  getGolfers() {
-    this.golfSer.getGolfers()
-      .then(data => {
-        let golfers = []
-        for (let i = 0; i < 200; i++) {
-          golfers.push(data[i])
-        }
-        this.postToGolfersDB(golfers)
-        this.golfers = golfers
-        this.spinner.hide()
-        this.setCounter()
-      })
-      .then((data) => {
-        this.initGolfers();
-      })
-  }
-
-
-  postToGolfersDB(data) {
-    this.golfSer.postGolfers(data)
-  }
-
   onDraftGolfer(e){
     this.messageService.draftGolferMessage(e);
     this.showMessage = true;
-    setInterval(() => {
-      this.showMessage = false
-    }, 3000)
-  }
-
-
-  setCounter() {
-    // setInterval(() => {
-    //   this.counter--
-    //   if (this.counter === 0) {
-    //     this.draftGolfer(this.golfers[0])
-    //   }
-    // }, 1000);
   }
 
 
@@ -107,48 +51,6 @@ export class DraftBoardComponent implements OnInit {
       })
   }
 
-  initGolfers() {
-    for (var i = 0; i < 26; i++) {
-      this.displayedGolfers.push(this.golfers[i])
-    }
-  }
-
-  onPageChange(p) {
-    switch (p) {
-      case 1:
-        this.pageSelectionLoop(0, 26);
-        break;
-
-      case 2:
-        this.pageSelectionLoop(26, 51);
-        break;
-
-      case 3:
-        this.pageSelectionLoop(51, 76);
-        break;
-
-      case 4:
-        this.pageSelectionLoop(76, 101);
-        break;
-
-      case 5:
-        this.pageSelectionLoop(101, 126);
-        break;
-
-      case 5:
-        this.pageSelectionLoop(126, 151);
-        break;
-    }
-
-
-  }
-
-  pageSelectionLoop(init, l) {
-    this.displayedGolfers = []
-    for (let i = init; i < l; i++) {
-      this.displayedGolfers.push(this.golfers[i])
-    }
-  }
 
   signOut() {
     this.loginSer.signOut(this.currentUser)
@@ -158,24 +60,12 @@ export class DraftBoardComponent implements OnInit {
 
   }
 
-  draftComplete() {
-    if (this.golfers.length === 0) {
-      return true;
-    }
-  }
 
   ngOnInit() {
 
     this.currentUser = this.actRoute.snapshot.paramMap.get("id");
-
-    this.spinner.show();
-
-    // if(this.users.length === 8){
-    //   this.getGolfers()
-    // }
-    this.getGolfersFromDB()
     this.getActiveUsers();
-
+    
     const socket = socketIo("http://localhost:3010");
     socket.emit("newConnection", { data: this.currentUser });
 

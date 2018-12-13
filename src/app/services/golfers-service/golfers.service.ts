@@ -22,17 +22,17 @@ export class GolfersService {
 })
     }
 
-   return this.http.get("https://api.fantasydata.net/golf/v2/{JSON}/PlayerSeasonStats/{2018}?",  httpOptions).toPromise()
+   return this.http.get("https://api.fantasydata.net/golf/v2/{JSON}/PlayerSeasonStats/{2018}?",  httpOptions)
   }
 
 
   postGolfers(golfers){
     console.log(golfers)
-    this.http.post("http://localhost:3010/golfers/post", golfers).toPromise()
+    this.http.post("http://localhost:3010/golfers/post", golfers).toPromise();
   }
 
   returnGolfers(){
-    return this.http.get("http://localhost:3010/golfers/post").toPromise()
+    return this.http.get("http://localhost:3010/golfers/post");
   }
 
   removeDraftedGolfer(golfer){
