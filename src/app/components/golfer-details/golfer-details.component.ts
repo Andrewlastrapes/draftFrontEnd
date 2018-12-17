@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PostService } from "../../services/post-service/post.service";
 import { GolfersService } from "../../services/golfers-service/golfers.service";
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { WarningModalComponent } from "../warning-modal/warning-modal.component";
 
@@ -29,11 +29,11 @@ export class GolferDetailsComponent implements OnInit {
     public post: PostService,
     public golfSer: GolfersService,
     private modalService: NgbModal,
-    private spinner: Ng4LoadingSpinnerService,) {
+    private spinner: Ng4LoadingSpinnerService, ) {
 
 
     this.counter = 60;
-    
+
   }
 
   getGolfers() {
@@ -75,55 +75,66 @@ export class GolferDetailsComponent implements OnInit {
   }
 
   setCounter() {
-    // setInterval(() => {
-    //   this.counter--
-    //   if (this.counter === 0) {
-    //     this.draftGolfer(this.golfers[0])
-    //   }
-    // }, 1000);
+    setInterval(() => {
+      this.counter--
+      if (this.counter === 0) {
+        this.draftGolfer(this.golfers[0])
+      }
+    }, 1000);
+  }
+
+  openModal(g) {
+
+    const modalRef = this.modalService.open(WarningModalComponent, { centered: true })
+    modalRef.componentInstance.name = g.Name;
+    modalRef.result.then(data => {
+
+      if (!data) {
+        return;
+      } else {
+        this.draftGolfer(g)
+      }
+    })
   }
 
 
   draftGolfer(g) {
 
-     // if(username !== this.currentUser){
+    let username;
+    // if(username !== this.currentUser){
     //   return;
     // }
     let userIndex;
-    let username;
 
-    // const modalRef = this.modalService.open(WarningModalComponent)
-    // modalRef.componentInstance.name = g.Name;
-    // console.log(modalRef.result)
-    
+
     this.users.filter((u, i) => {
       if (u.active) {
         userIndex = i;
         username = u.username
       }
     });
-    
-    
+
+
     this.golfers.filter((u, i) => {
       let golferIndex;
       if (g === u) {
         golferIndex = i;
         this.golfers.splice(golferIndex, 1)
-  
+
       }
     });
     this.displayedGolfers.filter((u, i) => {
       let golferIndex;
-      if(g === u){
+      if (g === u) {
         golferIndex = i;
         this.displayedGolfers.splice(golferIndex, 1)
       }
     })
 
 
-   
+
     this.counter = 60;
-  
+
 
     // Ascending flag
 
@@ -151,22 +162,23 @@ export class GolferDetailsComponent implements OnInit {
 
     }
 
-      let golfDraftObj = {
-        golfer: g,
-        user: this.users[userIndex]
-      }
-      this.draftMessage.emit(golfDraftObj)
-      this.post.postToDB(g, this.users[userIndex]);
-      this.golfSer.removeDraftedGolfer(g)
-      
+    let golfDraftObj = {
+      golfer: g,
+      user: this.users[userIndex]
+    }
+    this.draftMessage.emit(golfDraftObj)
 
-      this.post.getUsers().then(data => {
-        for (let i = 0; i < data["data"].length; i++) {
-          if (data["data"][i]["username"] === this.users[userIndex].username) {
-            this.users[userIndex].picks = data["data"][i]["picks"];
-          }
+    this.post.postToDB(g, this.users[userIndex]);
+    this.golfSer.removeDraftedGolfer(g)
+
+
+    this.post.getUsers().then(data => {
+      for (let i = 0; i < data["data"].length; i++) {
+        if (data["data"][i]["username"] === this.users[userIndex].username) {
+          this.users[userIndex].picks = data["data"][i]["picks"];
         }
-      });
+      }
+    });
 
   }
 
@@ -176,34 +188,58 @@ export class GolferDetailsComponent implements OnInit {
     }
   }
 
-    onPageChange(p) {
+  onPageChange(p) {
     switch (p) {
       case 1:
-        this.pageSelectionLoop(0, 26);
+        if (this.golfers.length > 24) {
+          this.pageSelectionLoop(0, 25);
+        } else {
+          this.pageSelectionLoop(0, this.golfers.length)
+        }
         break;
 
       case 2:
-        this.pageSelectionLoop(26, 51);
+        if (this.golfers.length > 50) {
+          this.pageSelectionLoop(26, 51);
+        } else {
+          this.pageSelectionLoop(26, this.golfers.length)
+        }
         break;
 
       case 3:
-        this.pageSelectionLoop(51, 76);
+        if (this.golfers.length > 75) {
+          this.pageSelectionLoop(51, 76);
+        } else {
+          this.pageSelectionLoop(51, this.golfers.length)
+        }
         break;
 
       case 4:
-        this.pageSelectionLoop(76, 101);
+        if (this.golfers.length > 100) {
+          this.pageSelectionLoop(76, 101);
+        } else {
+          this.pageSelectionLoop(76, this.golfers.length)
+        }
         break;
 
       case 5:
-        this.pageSelectionLoop(101, 126);
+        if (this.golfers.length > 125) {
+          this.pageSelectionLoop(101, 126);
+        } else {
+          this.pageSelectionLoop(101, this.golfers.length)
+        }
+
         break;
 
-      case 5:
-        this.pageSelectionLoop(126, 151);
+      case 6:
+        if (this.golfers.length > 1250) {
+          this.pageSelectionLoop(126, 151);
+        } else {
+          this.pageSelectionLoop(126, this.golfers.length)
+        }
+
         break;
     }
-
-
   }
 
   pageSelectionLoop(init, l) {
@@ -217,6 +253,11 @@ export class GolferDetailsComponent implements OnInit {
     if (this.golfers.length === 0) {
       return true;
     }
+  }
+
+
+  paginationSize(){
+    return this.golfers.length > 125 ? 125 : this.golfers.length
   }
 
   ngOnInit() {

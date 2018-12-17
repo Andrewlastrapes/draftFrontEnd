@@ -6,11 +6,31 @@ import * as socketIo from "socket.io-client";
 import { ActiveUsersService } from "../../services/active-users-service/active-users.service";
 import { LoginService } from "../../services/login-service/login.service";
 import { MessageService } from "../../services/message-service/message.service";
+import {
+  trigger,
+  style,
+  animate,
+  transition,
+  // ...
+} from '@angular/animations';
 
 
 
 @Component({
   selector: 'app-draft-board',
+  animations: [
+    trigger('myInsertRemoveTrigger', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('1s',
+          style({ opacity: 1 })),
+      ]),
+      transition(':leave',
+        [style({ opacity: 1 }),
+        animate('0.2s',
+          style({ opacity: 0 }))])
+    ]),
+  ],
   templateUrl: './draft-board.component.html',
   styleUrls: ['./draft-board.component.scss'],
 })
@@ -35,7 +55,7 @@ export class DraftBoardComponent implements OnInit {
 
   }
 
-  onDraftGolfer(e){
+  onDraftGolfer(e) {
     this.messageService.draftGolferMessage(e);
     this.showMessage = true;
   }
@@ -67,7 +87,7 @@ export class DraftBoardComponent implements OnInit {
     this.messageService.userSignedInMessage(this.currentUser)
     this.showMessage = true;
     this.getActiveUsers();
-    
+
     const socket = socketIo("http://localhost:3010");
     socket.emit("newConnection", { data: this.currentUser });
 

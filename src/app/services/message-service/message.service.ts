@@ -15,12 +15,16 @@ export class MessageService {
     let user = obj["user"]["username"];
     let golfer = obj["golfer"]["Name"];
     this.messages.push(`${user} has selected ${golfer}`)
-    this.spliceMessages()
+    setTimeout(()=>{
+      this.messages.splice(0, 1)
+    }, 3000)
   }
 
     userSignedInMessage(user){
       this.messages.push(`${user} has signed in.`)
-      this.spliceMessages()
+      setTimeout(()=>{
+        this.messages.splice(0, 1)
+      }, 3000)
     }
 
     spliceMessages(){

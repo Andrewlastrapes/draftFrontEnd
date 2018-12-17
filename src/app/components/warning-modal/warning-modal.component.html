@@ -8,6 +8,6 @@
   <p><strong>Are you sure you want to draft <span class="text-primary">{{name}}</span>?</strong></p>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark" (click)="activeModal.close('Close click')">Close</button>
-  <button type="button" ngbAutofocus class="btn btn-danger" (click)="activeModal.close('Ok click')">Yes</button>
+  <button type="button" class="btn btn-outline-dark" (click)="activeModal.close(false)">Close</button>
+  <button type="button" ngbAutofocus class="btn btn-danger" (click)="activeModal.close(true)">Yes</button>
 </div>

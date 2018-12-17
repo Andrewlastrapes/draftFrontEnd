@@ -1,5 +1,5 @@
 
-<div *ngFor="let m of messageService.messages">
-  <ngb-alert @myInsertRemoveTrigger type="success">{{m}}</ngb-alert>
+<div *ngFor="let m of messageService.messages" @myInsertRemoveTrigger>
+  <ngb-alert type="success" [dismissible]="false">{{m}}</ngb-alert>
 </div>
 

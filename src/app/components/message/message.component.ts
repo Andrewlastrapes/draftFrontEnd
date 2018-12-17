@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MessageService } from "../../services/message-service/message.service"; 
 import {
   trigger,
-  state,
   style,
   animate,
   transition,
@@ -18,7 +17,8 @@ import {
         animate('1s', style({ opacity: 1 })),
       ]),
       transition(':leave', [
-        animate('5s', style({ opacity: 0 }))
+        style({ opacity: 1 }),
+        animate('1s', style({ opacity: 0 }))
       ])
     ]),
   ],

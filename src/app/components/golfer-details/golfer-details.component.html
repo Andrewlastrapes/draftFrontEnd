@@ -14,7 +14,7 @@
 </div>
 <ng4-loading-spinner></ng4-loading-spinner>
 <div *ngIf="!draftComplete()">
-<ul class="list-group" *ngFor="let g of displayedGolfers; let i = index" (click)="draftGolfer(g)">
+<ul class="list-group" *ngFor="let g of displayedGolfers; let i = index" (click)="openModal(g)">
   <li class="list-group-item">
     <div class="row">
       <div class="col-6">
@@ -37,5 +37,5 @@
     </div>
     <div class="alert alert-success">Draft Complete</div>
   </div>
-<ngb-pagination [collectionSize]="125" pageSize="25" [(page)]="page" aria-label="Default pagination" (pageChange)="onPageChange($event)"
+<ngb-pagination [collectionSize]="paginationSize()" pageSize="25" [(page)]="page" aria-label="Default pagination" (pageChange)="onPageChange($event)"
       [directionLinks]="true" [boundaryLinks]="true"></ngb-pagination>

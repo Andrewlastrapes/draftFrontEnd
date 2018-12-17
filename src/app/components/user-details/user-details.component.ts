@@ -9,6 +9,7 @@ export class UserDetailsComponent implements OnInit {
 
   @Input() users; 
 
+
   showUsers(u) {
     if (u.picks.length > 0) {
       return true;
@@ -18,6 +19,7 @@ export class UserDetailsComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log(this.users)
   }
 
 }
