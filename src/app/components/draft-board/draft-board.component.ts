@@ -88,8 +88,7 @@ export class DraftBoardComponent implements OnInit {
     this.showMessage = true;
     this.getActiveUsers();
 
-    const socket = socketIo("http://localhost:3010");
-    socket.emit("newConnection", { data: this.currentUser });
+
 
   }
 

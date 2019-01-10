@@ -28,16 +28,16 @@ export class GolfersService {
 
   postGolfers(golfers){
     console.log(golfers)
-    this.http.post("http://localhost:3010/golfers/post", golfers).toPromise();
+    return this.http.post("http://localhost:3010/golfers/post", golfers)
   }
 
   returnGolfers(){
-    return this.http.get("http://localhost:3010/golfers/post");
+    return this.http.get("http://localhost:3010/golfers/post")
   }
 
   removeDraftedGolfer(golfer){
     console.log(golfer)
-    return this.http.post("http://localhost:3010/golfers/remove-drafted", golfer).toPromise();
+    return this.http.post("http://localhost:3010/golfers/remove-drafted", golfer)
   }
 
 

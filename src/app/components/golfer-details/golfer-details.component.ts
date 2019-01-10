@@ -4,6 +4,7 @@ import { GolfersService } from "../../services/golfers-service/golfers.service";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { WarningModalComponent } from "../warning-modal/warning-modal.component";
+import * as socketIo from "socket.io-client";
 
 @Component({
   selector: 'app-golfer-details',
@@ -15,6 +16,7 @@ export class GolferDetailsComponent implements OnInit {
   ascFlag: boolean = true;
   displayedGolfers: any = [];
   golfers: any = {}
+  socket = socketIo("http://localhost:3010");
 
 
 
@@ -22,6 +24,7 @@ export class GolferDetailsComponent implements OnInit {
   @Input() turn;
   @Input() currentUser;
   @Output() draftMessage = new EventEmitter<object>();
+  test="";
 
 
 
@@ -54,23 +57,27 @@ export class GolferDetailsComponent implements OnInit {
   getGolfersFromDB() {
     this.golfSer.returnGolfers()
       .subscribe(data => {
+        console.log(data)
         if (!data["data"].length) {
           this.getGolfers()
         } else {
           this.golfers = data["data"]
           this.spinner.hide()
-          this.setCounter()
+          // this.setCounter()
           this.initGolfers()
         }
       })
   }
 
   postToGolfersDB(data) {
-    this.golfSer.postGolfers(data)
+    this.golfSer.postGolfers(data).subscribe(data => {
+      console.log(data)
+    })
   }
 
 
   activeUser(u) {
+    console.log(u)
     this.turn = u
   }
 
@@ -83,7 +90,13 @@ export class GolferDetailsComponent implements OnInit {
     }, 1000);
   }
 
-  openModal(g) {
+  openModal(g, u) {
+    let user;
+    for(var i = 0; i < this.users.length; i++){
+      if(this.users[i].active){
+        user = this.users[i];
+      }
+    }
 
     const modalRef = this.modalService.open(WarningModalComponent, { centered: true })
     modalRef.componentInstance.name = g.Name;
@@ -92,13 +105,19 @@ export class GolferDetailsComponent implements OnInit {
       if (!data) {
         return;
       } else {
-        this.draftGolfer(g)
+        this.socket.emit("golferDrafted", {
+          golfer: g
+        });
+        this.removeGolferFromDB(g);
+        this.postGolfer(g, user);
       }
     })
   }
 
 
   draftGolfer(g) {
+
+  
 
     let username;
     // if(username !== this.currentUser){
@@ -113,26 +132,7 @@ export class GolferDetailsComponent implements OnInit {
         username = u.username
       }
     });
-
-
-    this.golfers.filter((u, i) => {
-      let golferIndex;
-      if (g === u) {
-        golferIndex = i;
-        this.golfers.splice(golferIndex, 1)
-
-      }
-    });
-    this.displayedGolfers.filter((u, i) => {
-      let golferIndex;
-      if (g === u) {
-        golferIndex = i;
-        this.displayedGolfers.splice(golferIndex, 1)
-      }
-    })
-
-
-
+    
     this.counter = 60;
 
 
@@ -162,24 +162,48 @@ export class GolferDetailsComponent implements OnInit {
 
     }
 
+    this.removeGolferFromArray(g);
+
     let golfDraftObj = {
       golfer: g,
       user: this.users[userIndex]
     }
-    this.draftMessage.emit(golfDraftObj)
+    this.draftMessage.emit(golfDraftObj);
+    
+    
+  }
+  
 
-    this.post.postToDB(g, this.users[userIndex]);
-    this.golfSer.removeDraftedGolfer(g)
 
-
-    this.post.getUsers().then(data => {
-      for (let i = 0; i < data["data"].length; i++) {
-        if (data["data"][i]["username"] === this.users[userIndex].username) {
-          this.users[userIndex].picks = data["data"][i]["picks"];
-        }
+  removeGolferFromArray(g){
+    this.golfers.filter((u, i) => {
+      let golferIndex;
+      if (JSON.stringify(g) === JSON.stringify(u)) {
+        golferIndex = i;
+        this.golfers.splice(golferIndex, 1)
+      }
+    });
+    this.displayedGolfers.filter((u, i) => {
+      let golferIndex;
+      if (JSON.stringify(g) === JSON.stringify(u)) {
+        golferIndex = i;
+        this.displayedGolfers.splice(golferIndex, 1)
       }
     });
 
+
+  }
+
+  removeGolferFromDB(g){
+    this.golfSer.removeDraftedGolfer(g).subscribe(data => {
+      console.log(`Remove Golfer: ${g.Name}`)
+    });
+  }
+
+  postGolfer(golfer, user){
+    this.post.postToDB(golfer, user).subscribe(data => {
+      console.log(data)
+    })
   }
 
   initGolfers() {
@@ -261,6 +285,13 @@ export class GolferDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.socket.emit("newConnection", { data: this.currentUser });
+    this.socket.on("golferDrafted", (data) => {
+      console.log(data["data"]["golfer"])
+      this.draftGolfer(data["data"]["golfer"])
+    });
+    
     this.spinner.show();
 
     // if(this.users.length === 8){

@@ -27,6 +27,13 @@ export class MessageService {
       }, 3000)
     }
 
+    postingErrorMessage(){
+      this.messages.push(`Error posting draft pick.`)
+      setTimeout(()=>{
+        this.messages.splice(0, 1)
+      }, 3000)
+    }
+
     spliceMessages(){
       if(this.messages.length === 3){
         this.messages.splice(0, 1)
