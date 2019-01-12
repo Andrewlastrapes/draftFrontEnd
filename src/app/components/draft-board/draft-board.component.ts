@@ -64,14 +64,14 @@ export class DraftBoardComponent implements OnInit {
   getActiveUsers() {
     this.activeUsersSer.getAllActiveUsers()
       .subscribe((data) => {
-        this.users = data["users"]
-        this.users[0]["active"] = true;
-        this.turn = this.users[0]["username"];
+        console.log(data["data"])
+
+        this.users = data["data"]
 
       })
   }
 
-
+ 
   signOut() {
     this.loginSer.signOut(this.currentUser)
       .then((data) => {

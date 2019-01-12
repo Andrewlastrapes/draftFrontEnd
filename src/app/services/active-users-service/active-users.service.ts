@@ -14,11 +14,25 @@ export class ActiveUsersService {
     private messageService: MessageService) { }
 
   getAllActiveUsers(){
-    return this.http.get("http://localhost:3010/active-users")
+    return this.http.get("http://localhost:3010/user/get-users")
     .pipe(
-      catchError(this.handleError('Get Active Users', []))
+      catchError(this.handleError('Get Signed-in Users', []))
     );
   }
+
+
+
+  postActiveUser(u){
+    return this.http.post("http://localhost:3010/user/set-active-user", u) .pipe(
+      catchError(this.handleError('Post Active User', []))
+    );
+  } 
+
+  getActiveUser(){
+    return this.http.get("http://localhost:3010/user/get-active-user")
+  }
+
+
 
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

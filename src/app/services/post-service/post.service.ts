@@ -25,6 +25,14 @@ export class PostService {
       catchError(this.handleError('addGolferUser'))
     )
   }
+
+  postActiveUser(u){
+    return this.http.post("http://localhost:3010/post/update-active", u).pipe(
+      tap(_ => this.log()),
+      catchError(this.handleError('updatedActiveUser'))
+    )
+  }
+  
   
 
   getUsers(){

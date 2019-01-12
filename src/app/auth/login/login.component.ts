@@ -29,6 +29,7 @@ export class LoginComponent {
         }
 
         this.loginServ.login(u, p).then(res => {
+            console.log(res)
           if(!res["token"]){
             this.loginError = true;
             this.errMessage = res["message"]

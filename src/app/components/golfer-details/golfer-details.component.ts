@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { WarningModalComponent } from "../warning-modal/warning-modal.component";
 import * as socketIo from "socket.io-client";
+import { ActiveUsersService } from "../../services/active-users-service/active-users.service";
 
 @Component({
   selector: 'app-golfer-details',
@@ -24,7 +25,7 @@ export class GolferDetailsComponent implements OnInit {
   @Input() turn;
   @Input() currentUser;
   @Output() draftMessage = new EventEmitter<object>();
-  test="";
+  
 
 
 
@@ -32,7 +33,8 @@ export class GolferDetailsComponent implements OnInit {
     public post: PostService,
     public golfSer: GolfersService,
     private modalService: NgbModal,
-    private spinner: Ng4LoadingSpinnerService, ) {
+    private spinner: Ng4LoadingSpinnerService,
+    private activeUsersSer: ActiveUsersService ) {
 
 
     this.counter = 60;
@@ -47,6 +49,7 @@ export class GolferDetailsComponent implements OnInit {
           golfers.push(data[i])
         }
         this.postToGolfersDB(golfers)
+        this.postActiveUser("", "init")
         this.golfers = golfers
         this.spinner.hide()
         this.setCounter()
@@ -85,7 +88,7 @@ export class GolferDetailsComponent implements OnInit {
     setInterval(() => {
       this.counter--
       if (this.counter === 0) {
-        this.draftGolfer(this.golfers[0])
+        // this.draftGolfer(this.golfers[0])
       }
     }, 1000);
   }
@@ -97,6 +100,10 @@ export class GolferDetailsComponent implements OnInit {
         user = this.users[i];
       }
     }
+    
+    if(user["username"] !== this.currentUser){
+      return;
+    }
 
     const modalRef = this.modalService.open(WarningModalComponent, { centered: true })
     modalRef.componentInstance.name = g.Name;
@@ -106,71 +113,76 @@ export class GolferDetailsComponent implements OnInit {
         return;
       } else {
         this.socket.emit("golferDrafted", {
-          golfer: g
+          golfer: g,
+          username: user
         });
         this.removeGolferFromDB(g);
         this.postGolfer(g, user);
+        this.updateTurn();
       }
     })
   }
 
-
-  draftGolfer(g) {
-
-  
-
-    let username;
-    // if(username !== this.currentUser){
-    //   return;
-    // }
+  updateTurn(){
+    
     let userIndex;
-
-
+    
     this.users.filter((u, i) => {
       if (u.active) {
         userIndex = i;
-        username = u.username
       }
     });
-    
-    this.counter = 60;
-
-
     // Ascending flag
 
     if (this.ascFlag) {
       if (userIndex === this.users.length - 1) {
         this.ascFlag = false;
-        this.activeUser(this.users[userIndex].username);
+        this.postActiveUser(this.users[userIndex].username, "");
 
       } else {
         this.users[userIndex + 1].active = true;
         this.users[userIndex].active = false;
-        this.activeUser(this.users[userIndex + 1].username)
+        this.postActiveUser(this.users[userIndex + 1].username, "")
 
       }
       // Descending flag
     } else {
       if (userIndex === 0) {
         this.ascFlag = true;
-        this.activeUser(this.users[userIndex].username)
+        this.postActiveUser(this.users[userIndex].username, "")
       } else {
         this.users[userIndex - 1].active = true;
         this.users[userIndex].active = false;
-        this.activeUser(this.users[userIndex - 1].username)
+        this.postActiveUser(this.users[userIndex - 1].username, "")
       }
 
     }
+
+  }
+
+
+  draftGolfer(g, u) {
+
+    this.counter = 60;
 
     this.removeGolferFromArray(g);
 
     let golfDraftObj = {
       golfer: g,
-      user: this.users[userIndex]
+      user: u
     }
+
     this.draftMessage.emit(golfDraftObj);
+    this.getActiveUserFromDB()
     
     
+  }
+
+  getActiveUserFromDB(){
+    return this.activeUsersSer.getActiveUser().subscribe(data => {
+      this.activeUser(data["data"]["username"])
+      console.log(data);
+    })
   }
   
 
@@ -205,6 +217,18 @@ export class GolferDetailsComponent implements OnInit {
       console.log(data)
     })
   }
+
+  postActiveUser(u, type){
+    let activeUser;
+    if(type === "init"){
+      activeUser = this.users[0];
+    }
+      activeUser = u;
+    this.activeUsersSer.postActiveUser(activeUser).subscribe(data => {
+      console.log(data)
+    })
+  }
+
 
   initGolfers() {
     for (var i = 0; i < 26; i++) {
@@ -288,10 +312,10 @@ export class GolferDetailsComponent implements OnInit {
 
     this.socket.emit("newConnection", { data: this.currentUser });
     this.socket.on("golferDrafted", (data) => {
-      console.log(data["data"]["golfer"])
-      this.draftGolfer(data["data"]["golfer"])
+      console.log(data)
+      this.draftGolfer(data["data"]["golfer"], data["data"]["username"])
     });
-    
+
     this.spinner.show();
 
     // if(this.users.length === 8){
