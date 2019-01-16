@@ -48,12 +48,12 @@ export class GolferDetailsComponent implements OnInit {
         for (let i = 0; i < 200; i++) {
           golfers.push(data[i])
         }
-        this.postToGolfersDB(golfers)
-        this.postActiveUser("", "init")
-        this.golfers = golfers
-        this.spinner.hide()
-        this.setCounter()
-        this.initGolfers()
+        this.postToGolfersDB(golfers);
+        this.postActiveUser("", "init");
+        this.golfers = golfers;
+        this.spinner.hide();
+        // this.setCounter();
+        this.initGolfers();
       })
   }
 
@@ -68,6 +68,7 @@ export class GolferDetailsComponent implements OnInit {
           this.spinner.hide()
           // this.setCounter()
           this.initGolfers()
+          this.getActiveUserFromDB()
         }
       })
   }
@@ -95,15 +96,17 @@ export class GolferDetailsComponent implements OnInit {
 
   openModal(g, u) {
     let user;
-    for(var i = 0; i < this.users.length; i++){
-      if(this.users[i].active){
-        user = this.users[i];
+  
+    for(let i = 0; i < this.users.length; i++){
+      console.log(this.users[i].username, this.turn)
+      if(this.users[i].username === this.turn){
+        user = this.users[i]
       }
     }
-    
-    if(user["username"] !== this.currentUser){
-      return;
-    }
+
+    // if(user["username"] !== this.currentUser){
+    //   return;
+    // }
 
     const modalRef = this.modalService.open(WarningModalComponent, { centered: true })
     modalRef.componentInstance.name = g.Name;
@@ -112,51 +115,68 @@ export class GolferDetailsComponent implements OnInit {
       if (!data) {
         return;
       } else {
+        this.handleDraftDB(g, user)
         this.socket.emit("golferDrafted", {
           golfer: g,
           username: user
         });
-        this.removeGolferFromDB(g);
-        this.postGolfer(g, user);
-        this.updateTurn();
       }
     })
   }
 
+  handleDraftDB(g, user){
+    this.removeGolferFromDB(g);
+    this.postGolfer(g, user);
+    this.updateTurn();
+  }
+
   updateTurn(){
+
+    this.post.getUsers().subscribe(data => {
+      let activeUsers;
+         activeUsers = data["data"].filter(user => {
+         return user["signedIn"] === true
+        
+      });
+       console.log(activeUsers)
     
     let userIndex;
     
-    this.users.filter((u, i) => {
-      if (u.active) {
+     activeUsers.filter((u, i) => {
+      if (u["active"]) {
         userIndex = i;
       }
     });
+    console.log(userIndex)
     // Ascending flag
 
+    console.log(activeUsers[userIndex].username)
+
     if (this.ascFlag) {
-      if (userIndex === this.users.length - 1) {
+      if (userIndex === activeUsers.length - 1) {
         this.ascFlag = false;
-        this.postActiveUser(this.users[userIndex].username, "");
+        this.postActiveUser(activeUsers[userIndex], "");
 
       } else {
-        this.users[userIndex + 1].active = true;
-        this.users[userIndex].active = false;
-        this.postActiveUser(this.users[userIndex + 1].username, "")
+        activeUsers[userIndex + 1].active = true;
+        activeUsers[userIndex].active = false;
+        this.postActiveUser(activeUsers[userIndex + 1], "")
 
       }
       // Descending flag
     } else {
       if (userIndex === 0) {
         this.ascFlag = true;
-        this.postActiveUser(this.users[userIndex].username, "")
+        this.postActiveUser(activeUsers[userIndex], "")
       } else {
-        this.users[userIndex - 1].active = true;
-        this.users[userIndex].active = false;
-        this.postActiveUser(this.users[userIndex - 1].username, "")
+        activeUsers[userIndex - 1].active = true;
+        activeUsers[userIndex].active = false;
+        this.postActiveUser(activeUsers[userIndex - 1], "")
       }
 
     }
+
+  });
 
   }
 
@@ -173,15 +193,17 @@ export class GolferDetailsComponent implements OnInit {
     }
 
     this.draftMessage.emit(golfDraftObj);
-    this.getActiveUserFromDB()
     
     
   }
 
   getActiveUserFromDB(){
-    return this.activeUsersSer.getActiveUser().subscribe(data => {
-      this.activeUser(data["data"]["username"])
+    console.log("183")
+     this.activeUsersSer.getActiveUser().subscribe(data => {
       console.log(data);
+      this.socket.emit("initialActiveUser", {
+        data: data["data"]["username"]
+      });
     })
   }
   
@@ -213,6 +235,7 @@ export class GolferDetailsComponent implements OnInit {
   }
 
   postGolfer(golfer, user){
+    console.log(golfer, user)
     this.post.postToDB(golfer, user).subscribe(data => {
       console.log(data)
     })
@@ -222,11 +245,20 @@ export class GolferDetailsComponent implements OnInit {
     let activeUser;
     if(type === "init"){
       activeUser = this.users[0];
-    }
+      console.log(activeUser)
+      this.activeUsersSer.postActiveUser(activeUser, "init").subscribe(data => {
+        console.log(data)
+        this.getActiveUserFromDB();
+      });
+    } else {
       activeUser = u;
-    this.activeUsersSer.postActiveUser(activeUser).subscribe(data => {
-      console.log(data)
-    })
+      console.log(activeUser)
+      this.activeUsersSer.postActiveUser(activeUser, "").subscribe(data => {
+        console.log(data)
+        this.getActiveUserFromDB();
+      });
+    }
+    
   }
 
 
@@ -310,18 +342,23 @@ export class GolferDetailsComponent implements OnInit {
 
   ngOnInit() {
 
+    this.spinner.show();
+    this.getGolfersFromDB()
+
     this.socket.emit("newConnection", { data: this.currentUser });
     this.socket.on("golferDrafted", (data) => {
       console.log(data)
       this.draftGolfer(data["data"]["golfer"], data["data"]["username"])
     });
-
-    this.spinner.show();
+    this.socket.on("initiate", (data) => {
+      console.log(data)
+      this.activeUser(data["data"]["data"])
+    })
 
     // if(this.users.length === 8){
     //   this.getGolfers()
     // }
-    this.getGolfersFromDB()
+    
   }
 
 }

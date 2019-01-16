@@ -22,14 +22,23 @@ export class ActiveUsersService {
 
 
 
-  postActiveUser(u){
-    return this.http.post("http://localhost:3010/user/set-active-user", u) .pipe(
+  postActiveUser(u, type){
+    console.log(u)
+    if(type === "init"){
+      return this.http.post("http://localhost:3010/user/set-initial-user", u).pipe(
+        catchError(this.handleError('Post Active User', []))
+      );
+    } else {
+      return this.http.post("http://localhost:3010/user/set-active-user", u).pipe(
       catchError(this.handleError('Post Active User', []))
     );
+    }
   } 
 
   getActiveUser(){
-    return this.http.get("http://localhost:3010/user/get-active-user")
+    return this.http.get("http://localhost:3010/user/get-active-user").pipe(
+      catchError(this.handleError('Post Active User', []))
+    );
   }
 
 

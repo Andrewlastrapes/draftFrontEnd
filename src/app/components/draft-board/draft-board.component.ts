@@ -73,10 +73,10 @@ export class DraftBoardComponent implements OnInit {
 
  
   signOut() {
-    this.loginSer.signOut(this.currentUser)
-      .then((data) => {
-        this.router.navigate([''])
-      })
+    // this.loginSer.signOut(this.currentUser)
+    //   .then((data) => {
+    //     this.router.navigate([''])
+    //   })
 
   }
 
