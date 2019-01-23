@@ -16,7 +16,6 @@ export class LoginService {
     }
 
     signOut(username){
-      console.log(username)
       let data = {
         username: username
       }

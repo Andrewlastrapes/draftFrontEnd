@@ -23,7 +23,6 @@ export class ActiveUsersService {
 
 
   postActiveUser(u, type){
-    console.log(u)
     if(type === "init"){
       return this.http.post("http://localhost:3010/user/set-initial-user", u).pipe(
         catchError(this.handleError('Post Active User', []))

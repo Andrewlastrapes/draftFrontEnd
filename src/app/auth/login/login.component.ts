@@ -29,14 +29,12 @@ export class LoginComponent {
         }
 
         this.loginServ.login(u, p).then(res => {
-            console.log(res)
           if(!res["token"]){
             this.loginError = true;
             this.errMessage = res["message"]
             console.log(this.errMessage)
             return;
           }
-          console.log(res)
           this.successMessage = res["message"]
           this.router.navigate(["draft-board", {id: res["user"]["username"]}])
         }

@@ -18,6 +18,7 @@ export class PostService {
       user: user,
       golfer: golfer
     }   
+    console.log(payload)
 
     return this.http.post("http://localhost:3010/post", payload)
     .pipe(
@@ -27,9 +28,29 @@ export class PostService {
   }
 
   postActiveUser(u){
+    console.log(u)
     return this.http.post("http://localhost:3010/post/update-active", u).pipe(
       tap(_ => this.log()),
       catchError(this.handleError('updatedActiveUser'))
+    )
+  }
+
+  updateTurn(bool){
+    let payload = {
+      b: bool
+    }
+    console.log(bool)
+    return this.http.post("http://localhost:3010/post/update-turn", payload).pipe(
+      tap(_ => this.log()),
+      catchError(this.handleError('updateTurn'))
+    )
+  }
+
+  initiateTurn(){
+    console.log("initiate turn")
+    return this.http.post("http://localhost:3010/post//initate-turn", "").pipe(
+      tap(_ => this.log()),
+      catchError(this.handleError('initiate-turn'))
     )
   }
   
@@ -37,6 +58,10 @@ export class PostService {
 
   getUsers(){
     return this.http.get("http://localhost:3010/user/register")
+  }
+
+  getTurn(){
+    return this.http.get("http://localhost:3010/post/get-turn")
   }
 
   private handleError<T> (operation = 'operation', result?: T) {

@@ -14,7 +14,7 @@ import { ActiveUsersService } from "../../services/active-users-service/active-u
 })
 export class GolferDetailsComponent implements OnInit {
   counter: number;
-  ascFlag: boolean = true;
+  ascFlag: boolean
   displayedGolfers: any = [];
   golfers: any = {}
   socket = socketIo("http://localhost:3010");
@@ -25,7 +25,7 @@ export class GolferDetailsComponent implements OnInit {
   @Input() turn;
   @Input() currentUser;
   @Output() draftMessage = new EventEmitter<object>();
-  
+
 
 
 
@@ -34,7 +34,7 @@ export class GolferDetailsComponent implements OnInit {
     public golfSer: GolfersService,
     private modalService: NgbModal,
     private spinner: Ng4LoadingSpinnerService,
-    private activeUsersSer: ActiveUsersService ) {
+    private activeUsersSer: ActiveUsersService) {
 
 
     this.counter = 60;
@@ -42,6 +42,7 @@ export class GolferDetailsComponent implements OnInit {
   }
 
   getGolfers() {
+    this.initiateTurn()
     this.golfSer.getGolfers()
       .subscribe(data => {
         let golfers = []
@@ -54,6 +55,7 @@ export class GolferDetailsComponent implements OnInit {
         this.spinner.hide();
         // this.setCounter();
         this.initGolfers();
+        
       })
   }
 
@@ -66,6 +68,7 @@ export class GolferDetailsComponent implements OnInit {
         } else {
           this.golfers = data["data"]
           this.spinner.hide()
+          this.getTurn()
           // this.setCounter()
           this.initGolfers()
           this.getActiveUserFromDB()
@@ -81,7 +84,6 @@ export class GolferDetailsComponent implements OnInit {
 
 
   activeUser(u) {
-    console.log(u)
     this.turn = u
   }
 
@@ -94,12 +96,11 @@ export class GolferDetailsComponent implements OnInit {
     }, 1000);
   }
 
-  openModal(g, u) {
+  openModal(g) {
     let user;
-  
-    for(let i = 0; i < this.users.length; i++){
-      console.log(this.users[i].username, this.turn)
-      if(this.users[i].username === this.turn){
+
+    for (let i = 0; i < this.users.length; i++) {
+      if (this.users[i].username === this.turn) {
         user = this.users[i]
       }
     }
@@ -124,92 +125,83 @@ export class GolferDetailsComponent implements OnInit {
     })
   }
 
-  handleDraftDB(g, user){
-    this.removeGolferFromDB(g);
-    this.postGolfer(g, user);
-    this.updateTurn();
-  }
+  handleDraftDB(g, user) {
+    this.post.getTurn().subscribe((data) => {
+      console.log(data)
+      this.ascFlag = data["data"]
+      this.removeGolferFromDB(g);
+      this.postGolfer(g, user);
+      this.updateTurn();
+    })
+   }
 
-  updateTurn(){
+  updateTurn() {
 
     this.post.getUsers().subscribe(data => {
       let activeUsers;
-         activeUsers = data["data"].filter(user => {
-         return user["signedIn"] === true
-        
+      activeUsers = data["data"].filter(user => {
+        return user["signedIn"] === true
       });
-       console.log(activeUsers)
-    
-    let userIndex;
-    
-     activeUsers.filter((u, i) => {
-      if (u["active"]) {
-        userIndex = i;
-      }
+
+      let userIndex;
+
+      activeUsers.filter((u, i) => {
+        if (u["active"]) {
+          userIndex = i;
+        }
+      });
+
+      // Ascending flag
+
+       let flag = this.ascFlag[0]["turn"];
+
+      if (flag) {
+        if (userIndex === activeUsers.length - 1) {
+          this.ascFlag[0]["turn"] = false;
+          this.postTurn(false)
+          this.postActiveUser(activeUsers[userIndex], "");
+        } else {
+          this.postActiveUser(activeUsers[userIndex + 1], "")
+
+        }
+        // Descending flag
+      } else {
+        if (userIndex === 0) {
+          this.ascFlag[0]["turn"] = true;
+          this.postTurn(true)
+          this.postActiveUser(activeUsers[userIndex], "");
+        } else {
+          this.postActiveUser(activeUsers[userIndex - 1], "")
+        }
+      }    
     });
-    console.log(userIndex)
-    // Ascending flag
-
-    console.log(activeUsers[userIndex].username)
-
-    if (this.ascFlag) {
-      if (userIndex === activeUsers.length - 1) {
-        this.ascFlag = false;
-        this.postActiveUser(activeUsers[userIndex], "");
-
-      } else {
-        activeUsers[userIndex + 1].active = true;
-        activeUsers[userIndex].active = false;
-        this.postActiveUser(activeUsers[userIndex + 1], "")
-
-      }
-      // Descending flag
-    } else {
-      if (userIndex === 0) {
-        this.ascFlag = true;
-        this.postActiveUser(activeUsers[userIndex], "")
-      } else {
-        activeUsers[userIndex - 1].active = true;
-        activeUsers[userIndex].active = false;
-        this.postActiveUser(activeUsers[userIndex - 1], "")
-      }
-
-    }
-
-  });
-
+    
   }
 
 
   draftGolfer(g, u) {
 
     this.counter = 60;
-
     this.removeGolferFromArray(g);
-
     let golfDraftObj = {
       golfer: g,
       user: u
     }
-
     this.draftMessage.emit(golfDraftObj);
-    
-    
   }
 
-  getActiveUserFromDB(){
-    console.log("183")
-     this.activeUsersSer.getActiveUser().subscribe(data => {
+  getActiveUserFromDB() {
+    this.activeUsersSer.getActiveUser().subscribe(data => {
       console.log(data);
       this.socket.emit("initialActiveUser", {
         data: data["data"]["username"]
       });
     })
   }
-  
 
 
-  removeGolferFromArray(g){
+
+  removeGolferFromArray(g) {
     this.golfers.filter((u, i) => {
       let golferIndex;
       if (JSON.stringify(g) === JSON.stringify(u)) {
@@ -228,37 +220,55 @@ export class GolferDetailsComponent implements OnInit {
 
   }
 
-  removeGolferFromDB(g){
+  removeGolferFromDB(g) {
     this.golfSer.removeDraftedGolfer(g).subscribe(data => {
       console.log(`Remove Golfer: ${g.Name}`)
     });
   }
 
-  postGolfer(golfer, user){
-    console.log(golfer, user)
+  postGolfer(golfer, user) {
     this.post.postToDB(golfer, user).subscribe(data => {
       console.log(data)
     })
   }
 
-  postActiveUser(u, type){
+  postTurn(bool) {
+    console.log(bool)
+    this.post.updateTurn(bool).subscribe(data => {
+      console.log(data);
+    })
+  }
+
+  initiateTurn(){
+    console.log("initiate turn")
+    this.post.initiateTurn().subscribe(data => {
+      console.log(data)
+    })
+  }
+
+  getTurn() {
+    this.post.getTurn().subscribe(data => {
+      console.log(data)
+      this.ascFlag = data["data"]
+    })
+  }
+
+  postActiveUser(u, type) {
     let activeUser;
-    if(type === "init"){
+    if (type === "init") {
       activeUser = this.users[0];
-      console.log(activeUser)
       this.activeUsersSer.postActiveUser(activeUser, "init").subscribe(data => {
         console.log(data)
         this.getActiveUserFromDB();
       });
     } else {
       activeUser = u;
-      console.log(activeUser)
       this.activeUsersSer.postActiveUser(activeUser, "").subscribe(data => {
         console.log(data)
         this.getActiveUserFromDB();
       });
     }
-    
+
   }
 
 
@@ -336,7 +346,7 @@ export class GolferDetailsComponent implements OnInit {
   }
 
 
-  paginationSize(){
+  paginationSize() {
     return this.golfers.length > 125 ? 125 : this.golfers.length
   }
 
@@ -358,7 +368,7 @@ export class GolferDetailsComponent implements OnInit {
     // if(this.users.length === 8){
     //   this.getGolfers()
     // }
-    
+
   }
 
 }
