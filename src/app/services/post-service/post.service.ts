@@ -17,18 +17,17 @@ export class PostService {
     let payload = {
       user: user,
       golfer: golfer
-    }   
-    console.log(payload)
+    }  
 
     return this.http.post("http://localhost:3010/post", payload)
     .pipe(
       tap(_ => this.log()),
       catchError(this.handleError('addGolferUser'))
     )
+   
   }
 
   postActiveUser(u){
-    console.log(u)
     return this.http.post("http://localhost:3010/post/update-active", u).pipe(
       tap(_ => this.log()),
       catchError(this.handleError('updatedActiveUser'))
@@ -39,7 +38,6 @@ export class PostService {
     let payload = {
       b: bool
     }
-    console.log(bool)
     return this.http.post("http://localhost:3010/post/update-turn", payload).pipe(
       tap(_ => this.log()),
       catchError(this.handleError('updateTurn'))
@@ -47,8 +45,7 @@ export class PostService {
   }
 
   initiateTurn(){
-    console.log("initiate turn")
-    return this.http.post("http://localhost:3010/post//initate-turn", "").pipe(
+    return this.http.post("http://localhost:3010/post/initate-turn", "").pipe(
       tap(_ => this.log()),
       catchError(this.handleError('initiate-turn'))
     )
@@ -61,6 +58,7 @@ export class PostService {
   }
 
   getTurn(){
+    console.log("In get turn")
     return this.http.get("http://localhost:3010/post/get-turn")
   }
 
@@ -72,7 +70,8 @@ export class PostService {
   }
 
   private log() {
-    this.messageService.postingErrorMessage();
+    // this.messageService.postingErrorMessage();
+    console.log("asdfkjahsfd")
   }
 
 }

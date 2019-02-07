@@ -62,7 +62,6 @@ export class GolferDetailsComponent implements OnInit {
   getGolfersFromDB() {
     this.golfSer.returnGolfers()
       .subscribe(data => {
-        console.log(data)
         if (!data["data"].length) {
           this.getGolfers()
         } else {
@@ -78,7 +77,6 @@ export class GolferDetailsComponent implements OnInit {
 
   postToGolfersDB(data) {
     this.golfSer.postGolfers(data).subscribe(data => {
-      console.log(data)
     })
   }
 
@@ -99,6 +97,7 @@ export class GolferDetailsComponent implements OnInit {
   openModal(g) {
     let user;
 
+    
     for (let i = 0; i < this.users.length; i++) {
       if (this.users[i].username === this.turn) {
         user = this.users[i]
@@ -117,26 +116,25 @@ export class GolferDetailsComponent implements OnInit {
         return;
       } else {
         this.handleDraftDB(g, user)
-        this.socket.emit("golferDrafted", {
-          golfer: g,
-          username: user
-        });
       }
     })
   }
 
   handleDraftDB(g, user) {
     this.post.getTurn().subscribe((data) => {
-      console.log(data)
-      this.ascFlag = data["data"]
+      this.ascFlag = data["data"][0]["turn"]
       this.removeGolferFromDB(g);
       this.postGolfer(g, user);
       this.updateTurn();
+      this.socket.emit("golferDrafted", {
+        golfer: g,
+        username: user
+      });
     })
    }
 
   updateTurn() {
-
+    
     this.post.getUsers().subscribe(data => {
       let activeUsers;
       activeUsers = data["data"].filter(user => {
@@ -153,11 +151,11 @@ export class GolferDetailsComponent implements OnInit {
 
       // Ascending flag
 
-       let flag = this.ascFlag[0]["turn"];
+       let flag = this.ascFlag;
 
       if (flag) {
         if (userIndex === activeUsers.length - 1) {
-          this.ascFlag[0]["turn"] = false;
+          this.ascFlag = false;
           this.postTurn(false)
           this.postActiveUser(activeUsers[userIndex], "");
         } else {
@@ -167,7 +165,7 @@ export class GolferDetailsComponent implements OnInit {
         // Descending flag
       } else {
         if (userIndex === 0) {
-          this.ascFlag[0]["turn"] = true;
+          this.ascFlag = true;
           this.postTurn(true)
           this.postActiveUser(activeUsers[userIndex], "");
         } else {
@@ -180,7 +178,6 @@ export class GolferDetailsComponent implements OnInit {
 
 
   draftGolfer(g, u) {
-
     this.counter = 60;
     this.removeGolferFromArray(g);
     let golfDraftObj = {
@@ -192,7 +189,6 @@ export class GolferDetailsComponent implements OnInit {
 
   getActiveUserFromDB() {
     this.activeUsersSer.getActiveUser().subscribe(data => {
-      console.log(data);
       this.socket.emit("initialActiveUser", {
         data: data["data"]["username"]
       });
@@ -222,33 +218,26 @@ export class GolferDetailsComponent implements OnInit {
 
   removeGolferFromDB(g) {
     this.golfSer.removeDraftedGolfer(g).subscribe(data => {
-      console.log(`Remove Golfer: ${g.Name}`)
     });
   }
 
   postGolfer(golfer, user) {
     this.post.postToDB(golfer, user).subscribe(data => {
-      console.log(data)
     })
   }
 
   postTurn(bool) {
-    console.log(bool)
     this.post.updateTurn(bool).subscribe(data => {
-      console.log(data);
     })
   }
 
   initiateTurn(){
-    console.log("initiate turn")
     this.post.initiateTurn().subscribe(data => {
-      console.log(data)
     })
   }
 
   getTurn() {
     this.post.getTurn().subscribe(data => {
-      console.log(data)
       this.ascFlag = data["data"]
     })
   }
@@ -258,11 +247,11 @@ export class GolferDetailsComponent implements OnInit {
     if (type === "init") {
       activeUser = this.users[0];
       this.activeUsersSer.postActiveUser(activeUser, "init").subscribe(data => {
-        console.log(data)
         this.getActiveUserFromDB();
       });
     } else {
       activeUser = u;
+      console.log(activeUser)
       this.activeUsersSer.postActiveUser(activeUser, "").subscribe(data => {
         console.log(data)
         this.getActiveUserFromDB();
@@ -340,6 +329,7 @@ export class GolferDetailsComponent implements OnInit {
   }
 
   draftComplete() {
+    console.log(this.golfers.length)
     if (this.golfers.length === 0) {
       return true;
     }
@@ -357,11 +347,9 @@ export class GolferDetailsComponent implements OnInit {
 
     this.socket.emit("newConnection", { data: this.currentUser });
     this.socket.on("golferDrafted", (data) => {
-      console.log(data)
       this.draftGolfer(data["data"]["golfer"], data["data"]["username"])
     });
     this.socket.on("initiate", (data) => {
-      console.log(data)
       this.activeUser(data["data"]["data"])
     })
 
