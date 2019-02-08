@@ -20,6 +20,7 @@ import { GolferDetailsComponent } from './components/golfer-details/golfer-detai
 import { WarningModalComponent } from './components/warning-modal/warning-modal.component';
 import { MessageComponent } from './components/message/message.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ChatComponent } from './components/chat/chat.component';
 
 
 
@@ -36,7 +37,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     UserDetailsComponent,
     GolferDetailsComponent,
     WarningModalComponent,
-    MessageComponent
+    MessageComponent,
+    ChatComponent
 
   ],
   imports: [

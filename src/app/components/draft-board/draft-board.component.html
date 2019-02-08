@@ -38,11 +38,12 @@
          
             <app-golfer-details (userDetailsUpdate)="updateUser($event)" (draftMessage)="onDraftGolfer($event)" [users]="users" [turn]="turn"
               [currentUser]="currentUser"></app-golfer-details>
-         
+      
         </div>
       </div>
       <div class="col-4">
         <app-user-details [users]="users"></app-user-details>
+        <app-chat></app-chat>
       </div>
     </div>
 </div>

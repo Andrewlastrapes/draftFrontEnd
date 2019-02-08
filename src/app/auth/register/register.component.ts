@@ -1,10 +1,29 @@
 import { Component } from "@angular/core";
 import { RegisterService } from "../../services/register-service/register.service";
 import { Router } from '@angular/router';
+import {
+    trigger,
+    style,
+    animate,
+    transition,
+    // ...
+  } from '@angular/animations';
 
 
 @Component({
     selector: "app-register",
+    animations: [
+        trigger('myInsertRemoveTrigger', [
+          transition(':enter', [
+            style({ opacity: 0}),
+            animate('1s', style({ opacity: 1 })),
+          ]),
+          transition(':leave', [
+            style({ opacity: 1 }),
+            animate('1s', style({ opacity: 0 }))
+          ])
+        ]),
+      ],
     templateUrl: "./register.component.html",
     styleUrls: ["./register.component.scss"]
 })
