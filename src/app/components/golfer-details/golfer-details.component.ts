@@ -25,6 +25,7 @@ export class GolferDetailsComponent implements OnInit {
   @Input() turn;
   @Input() currentUser;
   @Output() draftMessage = new EventEmitter<object>();
+  @Output() userDetailsUpdate = new EventEmitter<object>();
 
 
 
@@ -80,6 +81,9 @@ export class GolferDetailsComponent implements OnInit {
     })
   }
 
+  // updateUserDetails(data){
+  //   this.userDetailsUpdate.emit(data)
+  // }
 
   activeUser(u) {
     this.turn = u
@@ -253,7 +257,7 @@ export class GolferDetailsComponent implements OnInit {
       activeUser = u;
       console.log(activeUser)
       this.activeUsersSer.postActiveUser(activeUser, "").subscribe(data => {
-        console.log(data)
+        this.userDetailsUpdate.emit(data)
         this.getActiveUserFromDB();
       });
     }
@@ -329,7 +333,6 @@ export class GolferDetailsComponent implements OnInit {
   }
 
   draftComplete() {
-    console.log(this.golfers.length)
     if (this.golfers.length === 0) {
       return true;
     }

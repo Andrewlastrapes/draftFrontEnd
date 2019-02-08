@@ -1,34 +1,57 @@
 
-<div class="backgroundImage">
-<div class="cardCon">
-    <div (click)="navToLogin()">
-        <a><h5 class="registeredColor">Already registered? <span class="badge badge-primary">Click</span></h5></a>
-      </div>
+<!-- <div class="backgroundImage">
+<div class="cardCon"> -->
+   
   <div class="card text-white bg-info mb-3 moreCard">
-    <div class="card-header text-center">2019 Masters Draft</div>
+    <img class="card-img" src="../../../assets/img/golf.jpg">
+    <div class="card-img-overlay">
+   
+   
+      <div class="display-4 title">2019 Masters Draft</div>
+
     <div class="card-body">
-      <h5 class="card-title">Register</h5>
-    <div class="forms">
-      <div class="input-group input-group-lg username">
-        <input type="text" class="form-control" placeholder="Username" [(ngModel)]="username">
-      </div>
-      <div class="input-group input-group-lg password">
-        <input type="password" class="form-control" placeholder="Password" [(ngModel)]="password">
-      </div>
-      <div class="input-group input-group-lg password">
-          <input type="password" class="form-control" placeholder="Confirm Password" [(ngModel)]="passwordConfirm">
+
+      <div class="container">
+        <div class="row">
+          <div class="col-8">
+
+          </div>
+            <div class="col-4">
+              <div *ngIf="registerPage">
+                <h2 class="card-title">Register</h2>
+                <div class="forms">
+                    <div class="card-text input-group input-group-lg username">
+                      <input type="text" class="form-control" placeholder="Username" [(ngModel)]="username">
+                    </div>
+                    <div class="card-text input-group input-group-lg password">
+                      <input type="password" class="form-control" placeholder="Password" [(ngModel)]="password">
+                    </div>
+                    <div class="card-text input-group input-group-lg password">
+                        <input type="password" class="form-control" placeholder="Confirm Password" [(ngModel)]="passwordConfirm">
+                      </div>
+                    <div class="text-center buttonPad">
+                    <button type="button" class="btn btn-primary btn-lg" (click)="registerUser(username, password, passwordConfirm)">Submit</button>
+                  </div>
+                  <div (click)="navToLogin()" class="padTop">
+                      <a><h5 class="registeredColor">Already registered? <span class="badge badge-primary">Click</span></h5></a>
+                    </div>
+                  <div *ngIf="registrationError" padding-top class="alert alert-danger" role="alert">
+                    {{errMessage}}
+                  </div>
+                  </div>
+            </div>
+            <div *ngIf="!registerPage">
+                <app-login></app-login>
+            </div>
+            
+          </div>
         </div>
-      <div class="text-center buttonPad">
-      <button type="button" class="btn btn-primary btn-lg" (click)="registerUser(username, password, passwordConfirm)">Submit</button>
-    </div>
-    <div *ngIf="registrationError" padding-top class="alert alert-danger" role="alert">
-      {{errMessage}}
-    </div>
+  </div>
     </div>
     </div>
   </div>
-</div>
-</div>
+<!-- </div>
+</div> -->
 
 <!-- <div id="intro" class="view">
   <div class="full-bg-img">

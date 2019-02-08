@@ -13,16 +13,15 @@ export class RegisterComponent{
 
     registrationError: boolean=false;
     errMessage: any;
+    registerPage: boolean=true;
 
     constructor(
         public registerServ: RegisterService,
         public router: Router){
-
-
     }
 
     navToLogin(){
-        this.router.navigate(["/login"]);
+        this.registerPage = !this.registerPage
     }
 
     registerUser(username, password, passwordConfirm){
@@ -38,7 +37,7 @@ export class RegisterComponent{
                 this.errMessage = data["err"]
                 return;
             }
-            this.router.navigate(["/login"]);
+            this.registerPage = !this.registerPage
         });
     }
 

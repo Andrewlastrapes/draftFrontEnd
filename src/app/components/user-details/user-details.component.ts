@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { ActiveUsersService } from "../../services/active-users-service/active-users.service";
+import * as socketIo from "socket.io-client";
 
 @Component({
   selector: 'app-user-details',
@@ -8,6 +10,11 @@ import { Component, OnInit, Input } from '@angular/core';
 export class UserDetailsComponent implements OnInit {
 
   @Input() users; 
+  socket = socketIo("http://localhost:3010");
+  
+  constructor(private activeUsersSer: ActiveUsersService) {
+    
+  }
 
 
   showUsers(u) {
@@ -16,7 +23,19 @@ export class UserDetailsComponent implements OnInit {
     }
   }
 
-  constructor() { }
+ngOnChanges(){
+  this.socket.emit("updateUsers", {
+    users: this.users
+  })
+  this.socket.on("updateUsers", users => {
+    if(users["users"]["users"].length > 0){
+      console.log(users["users"]["users"])
+      this.users = users["users"]["users"]
+    }
+  })
+}
+
+
 
   ngOnInit() {
     

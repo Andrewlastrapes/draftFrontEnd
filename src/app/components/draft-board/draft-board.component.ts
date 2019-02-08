@@ -2,7 +2,6 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { GolfersService } from "../../services/golfers-service/golfers.service";
 import { Router } from "@angular/router";
 import { ActivatedRoute } from '@angular/router';
-import * as socketIo from "socket.io-client";
 import { ActiveUsersService } from "../../services/active-users-service/active-users.service";
 import { LoginService } from "../../services/login-service/login.service";
 import { MessageService } from "../../services/message-service/message.service";
@@ -60,14 +59,20 @@ export class DraftBoardComponent implements OnInit {
     this.showMessage = true;
   }
 
+  updateUser(e){
+    console.log("asdfasdf")
+    this.getActiveUsers()
+  }
+
 
   getActiveUsers() {
     this.activeUsersSer.getAllActiveUsers()
       .subscribe((data) => {
         console.log(data["data"])
-
         this.users = data["data"]
-
+        this.currentUser = data["data"][data["data"].length - 1]["username"]
+        console.log(this.currentUser)
+        this.messageService.userSignedInMessage(this.currentUser)
       })
   }
 
@@ -83,8 +88,6 @@ export class DraftBoardComponent implements OnInit {
 
   ngOnInit() {
 
-    this.currentUser = this.actRoute.snapshot.paramMap.get("id");
-    this.messageService.userSignedInMessage(this.currentUser)
     this.showMessage = true;
     this.getActiveUsers();
 

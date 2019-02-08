@@ -36,7 +36,7 @@
       <div class="col-8">
         <div class="list-group">
          
-            <app-golfer-details (draftMessage)="onDraftGolfer($event)" [users]="users" [turn]="turn"
+            <app-golfer-details (userDetailsUpdate)="updateUser($event)" (draftMessage)="onDraftGolfer($event)" [users]="users" [turn]="turn"
               [currentUser]="currentUser"></app-golfer-details>
          
         </div>
