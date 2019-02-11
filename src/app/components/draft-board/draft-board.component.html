@@ -10,7 +10,7 @@
     </ul>
   </div>
 </nav>
-<div class="jumbotron jumbotron-fluid">
+<div class="jumbotron jumbotron-fluid ">
   <div class="container ">
     <div class="row">
       <div class="col-6">
@@ -33,7 +33,7 @@
 
 <div class="container">
     <div class="row">
-      <div class="col-8">
+      <div class="col-7">
         <div class="list-group">
          
             <app-golfer-details (userDetailsUpdate)="updateUser($event)" (draftMessage)="onDraftGolfer($event)" [users]="users" [turn]="turn"
@@ -41,9 +41,11 @@
       
         </div>
       </div>
-      <div class="col-4">
+      <div class="col-5">
         <app-user-details [users]="users"></app-user-details>
-        <app-chat></app-chat>
+        <div class="padTop">
+            <app-chat [user]="currentUser" [users]="users"></app-chat>
+        </div>
       </div>
     </div>
 </div>

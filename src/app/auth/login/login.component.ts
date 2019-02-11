@@ -36,7 +36,8 @@ export class LoginComponent {
             return;
           }
           this.successMessage = res["message"]
-          this.router.navigate(["draft-board", {id: res["user"]["username"]}])
+          console.log(res)
+          this.router.navigate(["draft-board"], {queryParams: res})
         }
           
         )

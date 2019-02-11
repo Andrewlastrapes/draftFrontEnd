@@ -16,14 +16,20 @@ export class UserDetailsComponent implements OnInit {
     
   }
 
-
   showUsers(u) {
     if (u.picks.length > 0) {
       return true;
     }
   }
 
+  activeUser(u){
+    if(u.active){
+      return "list-group-item list-group-item-action list-group-item-success";
+    }
+  }
+
 ngOnChanges(){
+  console.log(this.users)
   this.socket.emit("updateUsers", {
     users: this.users
   })
@@ -38,7 +44,7 @@ ngOnChanges(){
 
 
   ngOnInit() {
-    
+   
   }
 
 }

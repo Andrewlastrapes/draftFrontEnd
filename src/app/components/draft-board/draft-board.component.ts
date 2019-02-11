@@ -3,6 +3,7 @@ import { GolfersService } from "../../services/golfers-service/golfers.service";
 import { ActiveUsersService } from "../../services/active-users-service/active-users.service";
 import { LoginService } from "../../services/login-service/login.service";
 import { MessageService } from "../../services/message-service/message.service";
+import { ActivatedRoute } from '@angular/router';
 
 import {
   trigger,
@@ -47,7 +48,8 @@ export class DraftBoardComponent implements OnInit {
     public golfSer: GolfersService,
     private activeUsersSer: ActiveUsersService,
     public loginSer: LoginService,
-    private messageService: MessageService) {
+    private messageService: MessageService,
+    private route: ActivatedRoute) {
 
   }
 
@@ -65,8 +67,8 @@ export class DraftBoardComponent implements OnInit {
     this.activeUsersSer.getAllActiveUsers()
       .subscribe((data) => {
         this.users = data["data"]
-        this.currentUser = data["data"][data["data"].length - 1]["username"]
-        this.messageService.userSignedInMessage(this.currentUser)
+        // this.currentUser = data["data"][data["data"].length - 1]["username"]
+        // this.messageService.userSignedInMessage(this.currentUser)
       })
   }
 
@@ -80,8 +82,13 @@ export class DraftBoardComponent implements OnInit {
   }
 
 
-  ngOnInit() {
 
+  ngOnInit() {
+    
+   this.route.queryParams.subscribe(data => {
+     this.currentUser = data
+   })
+    
     this.showMessage = true;
     this.getActiveUsers();
 

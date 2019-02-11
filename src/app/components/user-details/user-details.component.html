@@ -1,5 +1,6 @@
+
 <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0" *ngFor="let u of users">
-  <ngb-panel [ngClass]="{'activeTurn': u.active}" title="{{u.username}}" [disabled]="!showUsers(u)">
+  <ngb-panel title="{{u.username}}" [disabled]="!showUsers(u)" [type]="activeUser(u)">
     <ng-template ngbPanelContent>
       <p *ngFor="let p of u.picks; let i = index">{{i + 1}}: {{p}}</p>
     </ng-template>
