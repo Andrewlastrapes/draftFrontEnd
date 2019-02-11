@@ -10,8 +10,8 @@
     </ul>
   </div>
 </nav>
-<div class="jumbotron jumbotron-fluid ">
-  <div class="container ">
+<!-- <div class="jumbotron jumbotron-fluid ">
+  <div class="container">
     <div class="row">
       <div class="col-6">
         <h1 class="display-4 ">2019 Masters Draft</h1>
@@ -23,14 +23,10 @@
         </div>
       </div>
     </div>
-
-
-
-    <!-- <img class="imgHeight .img-fluid. max-width: 100%;" src="../assets/images/Augusta-Featured.jpg"> -->
   </div>
-</div>
+</div> -->
 
-
+<div class="padTop">
 <div class="container">
     <div class="row">
       <div class="col-7">
@@ -41,11 +37,16 @@
       
         </div>
       </div>
+     
       <div class="col-5">
+        <div class="sticky-top">
         <app-user-details [users]="users"></app-user-details>
         <div class="padTop">
             <app-chat [user]="currentUser" [users]="users"></app-chat>
         </div>
       </div>
+      </div>
+  
     </div>
+</div>
 </div>
