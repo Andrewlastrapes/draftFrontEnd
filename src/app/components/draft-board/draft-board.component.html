@@ -1,4 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light navbar">
+    <div class="float-left"><h5><small>Welcome, </small>{{currentUser.user}}</h5></div>
+    <div></div>
   <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
@@ -10,42 +12,38 @@
     </ul>
   </div>
 </nav>
-<!-- <div class="jumbotron jumbotron-fluid ">
-  <div class="container">
-    <div class="row">
-      <div class="col-6">
-        <h1 class="display-4 ">2019 Masters Draft</h1>
-        <p class="lead">The draft will begin when the 8th user logs in.</p>
-      </div>
-      <div class="col-6">
+
+<div class="container con">
+  <div class="row">
+    <div class="col-md-5">
         <div *ngIf="showMessage">
-          <app-message></app-message>
+            <app-message></app-message>
         </div>
-      </div>
+    </div>
+    <div class="col-6">
+        
     </div>
   </div>
-</div> -->
+  </div>
 
-<div class="padTop">
+<div class="littlePad">
 <div class="container">
     <div class="row">
-      <div class="col-7">
+      <div class="col-md-7">
         <div class="list-group">
-         
-            <app-golfer-details (userDetailsUpdate)="updateUser($event)" (draftMessage)="onDraftGolfer($event)" [users]="users" [turn]="turn"
+          <app-golfer-details (userDetailsUpdate)="updateUser($event)" (draftMessage)="onDraftGolfer($event)" [users]="users" [turn]="turn"
               [currentUser]="currentUser"></app-golfer-details>
-      
+         </div>
+      </div>
+      <div class="col-md-5">
+          <div class="sticky-top">
+              <app-chat [user]="currentUser" [users]="users"></app-chat>
+            <div class="padTop">
+                <app-user-details [users]="users"></app-user-details>
+             
+            </div>
+          </div>
         </div>
-      </div>
-     
-      <div class="col-5">
-        <div class="sticky-top">
-        <app-user-details [users]="users"></app-user-details>
-        <div class="padTop">
-            <app-chat [user]="currentUser" [users]="users"></app-chat>
-        </div>
-      </div>
-      </div>
   
     </div>
 </div>

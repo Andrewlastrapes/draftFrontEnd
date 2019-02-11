@@ -1,5 +1,5 @@
 
-<div>
+<p class="text-muted">Click name to see drafted golfers</p>
 <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0" *ngFor="let u of users">
   <ngb-panel title="{{u.username}}" [disabled]="!showUsers(u)" [type]="activeUser(u)">
     <ng-template ngbPanelContent>
@@ -7,4 +7,3 @@
     </ng-template>
   </ngb-panel>
 </ngb-accordion>
-</div>

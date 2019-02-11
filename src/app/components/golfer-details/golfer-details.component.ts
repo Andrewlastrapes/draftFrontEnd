@@ -108,9 +108,11 @@ export class GolferDetailsComponent implements OnInit {
       }
     }
 
-    // if(user["username"] !== this.currentUser){
-    //   return;
-    // }
+   if(user["username"] !== this.currentUser["user"]){
+     return;
+   }
+
+   console.log(user["username"], this.currentUser["user"])
 
     const modalRef = this.modalService.open(WarningModalComponent, { centered: true })
     modalRef.componentInstance.name = g.Name;

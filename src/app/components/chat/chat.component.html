@@ -2,8 +2,6 @@
   <div class="card" style="height: 18rem;">
     <p class="card-text"><small class="text-muted">Chatroom: {{users.length}} current users</small></p>
     <div *ngFor="let c of chatArray">
-        <!-- <p class="username">{{c.user}}</p>
-        <p>{{c.message}}</p> -->
         <div><span class="username">{{c.user}}</span>: {{c.message}}</div>
     </div>
   </div>
