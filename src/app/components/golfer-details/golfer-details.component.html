@@ -15,7 +15,7 @@
 <ng4-loading-spinner></ng4-loading-spinner>
 <div *ngIf="!draftComplete()">
 <ul class="list-group" *ngFor="let g of displayedGolfers; let i = index" (click)="openModal(g)">
-  <li class="list-group-item">
+  <li class="list-group-item" @myInsertRemoveTrigger>
     <div class="row">
       <div class="col-6">
         <h6>{{g.Name}}</h6>
@@ -27,7 +27,6 @@
         <small>Events: {{g.Events}}</small>
       </div>
     </div>
-
   </li>
 </ul>
 </div>

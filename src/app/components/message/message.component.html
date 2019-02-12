@@ -1,5 +1,16 @@
 
-<div *ngFor="let m of messageService.messages" @myInsertRemoveTrigger>
-  <ngb-alert type="danger" [dismissible]="false">{{m}}</ngb-alert>
-</div>
+
+<!-- <div *ngFor="let m of messageService.messages; let i = index" @myInsertRemoveTrigger> -->
+
+  <div class="container">
+    <div class="row">
+      <div class="col-4" *ngIf="messageService.messages.length > 0" @myInsertRemoveTrigger>
+          <ngb-alert type="danger" [dismissible]="false">{{messageService.messages[0]}}</ngb-alert>
+      </div>
+      <div class="col-4" *ngIf="messageService.messages.length > 1" @myInsertRemoveTrigger>
+          <ngb-alert type="danger" [dismissible]="false">{{messageService.messages[1]}}</ngb-alert>
+        </div>
+    </div>
+  </div>
+
 

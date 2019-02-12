@@ -6,9 +6,28 @@ import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { WarningModalComponent } from "../warning-modal/warning-modal.component";
 import * as socketIo from "socket.io-client";
 import { ActiveUsersService } from "../../services/active-users-service/active-users.service";
+import {
+  trigger,
+  style,
+  animate,
+  transition,
+  // ...
+} from '@angular/animations';
 
 @Component({
   selector: 'app-golfer-details',
+  animations: [
+    trigger('myInsertRemoveTrigger', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('1s',
+          style({ opacity: 1 })),
+      ]),
+      transition(':leave',
+        [style({ opacity: 1 }),
+        animate('0.2s',
+          style({ opacity: 0 }))])
+    ])],
   templateUrl: './golfer-details.component.html',
   styleUrls: ['./golfer-details.component.scss']
 })
@@ -50,6 +69,7 @@ export class GolferDetailsComponent implements OnInit {
         for (let i = 0; i < 200; i++) {
           golfers.push(data[i])
         }
+        console.log(golfers)
         this.postToGolfersDB(golfers);
         this.postActiveUser("", "init");
         this.golfers = golfers;
@@ -67,6 +87,7 @@ export class GolferDetailsComponent implements OnInit {
           this.getGolfers()
         } else {
           this.golfers = data["data"]
+          console.log(this.golfers)
           this.spinner.hide()
           this.getTurn()
           // this.setCounter()
@@ -111,9 +132,6 @@ export class GolferDetailsComponent implements OnInit {
    if(user["username"] !== this.currentUser["user"]){
      return;
    }
-
-   console.log(user["username"], this.currentUser["user"])
-
     const modalRef = this.modalService.open(WarningModalComponent, { centered: true })
     modalRef.componentInstance.name = g.Name;
     modalRef.result.then(data => {
@@ -268,7 +286,9 @@ export class GolferDetailsComponent implements OnInit {
 
 
   initGolfers() {
-    for (var i = 0; i < 26; i++) {
+    let iter = this.golfers.length > 26 ? 26 : this.golfers.length
+
+    for (var i = 0; i < iter; i++) {
       this.displayedGolfers.push(this.golfers[i])
     }
   }
@@ -335,6 +355,7 @@ export class GolferDetailsComponent implements OnInit {
   }
 
   draftComplete() {
+
     if (this.golfers.length === 0) {
       return true;
     }
@@ -357,11 +378,6 @@ export class GolferDetailsComponent implements OnInit {
     this.socket.on("initiate", (data) => {
       this.activeUser(data["data"]["data"])
     })
-
-    // if(this.users.length === 8){
-    //   this.getGolfers()
-    // }
-
   }
 
 }
