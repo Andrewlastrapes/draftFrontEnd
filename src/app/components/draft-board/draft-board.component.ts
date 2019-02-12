@@ -40,8 +40,9 @@ export class DraftBoardComponent implements OnInit {
   loggedOut: boolean = true;
   currentUser: any;
   turn: any;
-  displayedGolfers: any = []
-  showMessage: boolean = false
+  displayedGolfers: any = [];
+  showMessage: boolean = false;
+  complete: boolean=false;
 
   constructor(
 
@@ -62,6 +63,9 @@ export class DraftBoardComponent implements OnInit {
     this.getActiveUsers()
   }
 
+  notified(){
+    this.complete = true
+  }
 
   getActiveUsers() {
     this.activeUsersSer.getAllActiveUsers()

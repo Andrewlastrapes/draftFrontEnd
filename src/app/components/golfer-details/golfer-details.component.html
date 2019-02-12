@@ -1,5 +1,5 @@
 
-<div class="page-header list-group-item list-group-item-action list-group-item-success">
+<div class="page-header list-group-item list-group-item-action list-group-item-success" *ngIf="!complete">
   <div class="row">
     <div class="col-9">
       <h1><small>Turn: </small>{{turn}}</h1>
@@ -13,7 +13,7 @@
   </div>
 </div>
 <ng4-loading-spinner></ng4-loading-spinner>
-<div *ngIf="!draftComplete()">
+<div *ngIf="!complete">
 <ul class="list-group" *ngFor="let g of displayedGolfers; let i = index" (click)="openModal(g)">
   <li class="list-group-item" @myInsertRemoveTrigger>
     <div class="row">
@@ -30,11 +30,5 @@
   </li>
 </ul>
 </div>
-<div *ngIf="draftComplete()">
-    <div class="page-header list-group-item active">
-      <h1> Thank you</h1>
-    </div>
-    <div class="alert alert-success">Draft Complete</div>
-  </div>
-<ngb-pagination [collectionSize]="paginationSize()" pageSize="25" [(page)]="page" aria-label="Default pagination" (pageChange)="onPageChange($event)"
+<ngb-pagination *ngIf="!complete" [collectionSize]="paginationSize()" pageSize="25" [(page)]="page" aria-label="Default pagination" (pageChange)="onPageChange($event)"
       [directionLinks]="true" [boundaryLinks]="true"></ngb-pagination>

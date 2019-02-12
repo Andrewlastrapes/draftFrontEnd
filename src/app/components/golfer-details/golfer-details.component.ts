@@ -37,6 +37,7 @@ export class GolferDetailsComponent implements OnInit {
   displayedGolfers: any = [];
   golfers: any = {}
   socket = socketIo("http://localhost:3010");
+  complete: boolean=false;
 
 
 
@@ -45,6 +46,7 @@ export class GolferDetailsComponent implements OnInit {
   @Input() currentUser;
   @Output() draftMessage = new EventEmitter<object>();
   @Output() userDetailsUpdate = new EventEmitter<object>();
+  @Output() notifyDraftComplete = new EventEmitter()
 
 
 
@@ -62,11 +64,14 @@ export class GolferDetailsComponent implements OnInit {
   }
 
   getGolfers() {
+    this.post.draftStart().subscribe(data => {
+      console.log(data)
+    })
     this.initiateTurn()
     this.golfSer.getGolfers()
       .subscribe(data => {
         let golfers = []
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < 10; i++) {
           golfers.push(data[i])
         }
         console.log(golfers)
@@ -84,7 +89,14 @@ export class GolferDetailsComponent implements OnInit {
     this.golfSer.returnGolfers()
       .subscribe(data => {
         if (!data["data"].length) {
-          this.getGolfers()
+          this.post.getDraftComplete().subscribe(data => {
+            if(data["status"].length === 0){
+              this.getGolfers()
+            } else {
+              this.complete = true;
+              this.notifyDraftComplete.emit(this.complete)
+            }
+          })
         } else {
           this.golfers = data["data"]
           console.log(this.golfers)
@@ -101,10 +113,6 @@ export class GolferDetailsComponent implements OnInit {
     this.golfSer.postGolfers(data).subscribe(data => {
     })
   }
-
-  // updateUserDetails(data){
-  //   this.userDetailsUpdate.emit(data)
-  // }
 
   activeUser(u) {
     this.turn = u
@@ -237,7 +245,10 @@ export class GolferDetailsComponent implements OnInit {
       }
     });
 
-
+    if(this.golfers.length === 0){
+      this.complete = true;
+      this.notifyDraftComplete.emit(this.complete)
+    }
   }
 
   removeGolferFromDB(g) {
@@ -357,7 +368,9 @@ export class GolferDetailsComponent implements OnInit {
   draftComplete() {
 
     if (this.golfers.length === 0) {
-      return true;
+      this.post.draftComplete().subscribe(data => {
+        this.complete = true; 
+      })
     }
   }
 

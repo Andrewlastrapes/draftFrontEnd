@@ -1,0 +1,47 @@
+<!-- <div class="page-header list-group-item active">
+    <h1> Thank you</h1>
+  </div>
+  <div class="alert alert-success">Draft Complete</div> -->
+
+  <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+              <h1 class="display-4">Thanks</h1>
+              <p class="lead">The draft has completed. Good luck to all.</p>
+              <p>Revisit this site to see our updated leaderboard.</p>
+          </div>
+          <div class="col">
+              <app-chat [user]="currentUser" [users]="users"></app-chat>
+          </div>
+        </div>
+       </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-3" *ngFor="let u of users; let i = index">
+            <div *ngIf="i < 4">
+                <div class="card">
+                    <div class="card-header">
+                     {{u.username}}
+                    </div>
+                    <ul class="list-group list-group-flush" *ngFor="let p of u.picks">
+                      <li class="list-group-item">{{p}}</li>
+                    </ul>
+                  </div>
+           
+            </div>
+            <div *ngIf="i > 3">
+                <div class="card">
+                    <div class="card-header">
+                     {{u.username}}
+                    </div>
+                    <ul class="list-group list-group-flush" *ngFor="let p of u.picks">
+                      <li class="list-group-item">{{p}}</li>
+                    </ul>
+                  </div>
+              </div>
+        </div>
+      </div>
+    </div>
+ 

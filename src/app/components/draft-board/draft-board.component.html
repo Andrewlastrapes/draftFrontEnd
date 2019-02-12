@@ -1,6 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light navbar">
-    <div class="float-left"><h5><small>Welcome, </small>{{currentUser.user}}</h5></div>
-    <div></div>
+  <div class="float-left">
+    <h5><small>Welcome, </small>{{currentUser.user}}</h5>
+  </div>
+  <div></div>
   <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item">
@@ -14,34 +16,49 @@
 </nav>
 
 <div class="container con">
-      <div class="row">
-        <div class="col">
-            <div *ngIf="showMessage">
-                <app-message></app-message>
-              </div>
-        </div>
+  <div class="row">
+    <div class="col">
+      <div *ngIf="showMessage">
+        <app-message></app-message>
       </div>
     </div>
+  </div>
+</div>
 
-<div class="littlePad">
-<div class="container">
+<div class="littlePad" *ngIf="!complete">
+  <div class="container">
     <div class="row">
       <div class="col-md-7">
         <div class="list-group">
-          <app-golfer-details (userDetailsUpdate)="updateUser($event)" (draftMessage)="onDraftGolfer($event)" [users]="users" [turn]="turn"
-              [currentUser]="currentUser"></app-golfer-details>
-         </div>
+          <app-golfer-details (userDetailsUpdate)="updateUser($event)" (draftMessage)="onDraftGolfer($event)"
+            (notifyDraftComplete)="notified($event)" [users]="users" [turn]="turn" [currentUser]="currentUser"></app-golfer-details>
+        </div>
       </div>
-      <div class="col-md-5">
-          <div class="sticky-top">
-              <app-chat [user]="currentUser" [users]="users"></app-chat>
-            <div class="padTop">
-                <app-user-details [users]="users"></app-user-details>
-             
-            </div>
+      <div class="col-md-5" *ngIf="!complete">
+        <div class="sticky-top">
+          <app-chat [user]="currentUser" [users]="users"></app-chat>
+          <div class="padTop" *ngIf="!complete">
+            <app-user-details [users]="users"></app-user-details>
           </div>
         </div>
-  
+      </div>
     </div>
+  </div>
 </div>
-</div>
+
+<div *ngIf="complete">
+    <app-draft-complete [users]="users" [currentUser]="currentUser"></app-draft-complete>
+   </div>
+
+<!-- <div class="littlePad" *ngIf="complete">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-7">
+        <div class="list-group">
+          <app-golfer-details (userDetailsUpdate)="updateUser($event)" (draftMessage)="onDraftGolfer($event)"
+            (notifyDraftComplete)="notified($event)" [users]="users" [turn]="turn" [currentUser]="currentUser"></app-golfer-details>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->

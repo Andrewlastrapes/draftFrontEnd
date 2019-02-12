@@ -62,6 +62,18 @@ export class PostService {
     return this.http.get("http://localhost:3010/post/get-turn")
   }
 
+  draftComplete(){
+    return this.http.post("http://localhost:3010/post/draft-completed", true)
+  }
+
+  getDraftComplete(){
+    return this.http.get("http://localhost:3010/post/draft-completed")
+  }
+
+  draftStart(){
+    return this.http.post("http://localhost:3010/post/draft-started", "")
+  }
+
   private handleError<T> (operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
       console.error(error); 
