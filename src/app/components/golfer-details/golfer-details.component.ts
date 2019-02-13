@@ -82,12 +82,11 @@ export class GolferDetailsComponent implements OnInit {
         for (let i = 0; i < 200; i++) {
           golfers.push(data[i])
         }
-        console.log(golfers)
         this.postToGolfersDB(golfers);
         this.postActiveUser("", "init");
         this.golfers = golfers;
         this.spinner.hide();
-        // this.setCounter();
+        this.setCounter();
         this.initGolfers();
         
       })
@@ -107,10 +106,9 @@ export class GolferDetailsComponent implements OnInit {
           })
         } else {
           this.golfers = data["data"]
-          console.log(this.golfers)
           this.spinner.hide()
           this.getTurn()
-          // this.setCounter()
+          this.setCounter()
           this.initGolfers()
           this.getActiveUserFromDB()
         }
@@ -128,9 +126,19 @@ export class GolferDetailsComponent implements OnInit {
 
   setCounter() {
     setInterval(() => {
+      let user
       this.counter--
       if (this.counter === 0) {
-        // this.draftGolfer(this.golfers[0])
+          
+    for (let i = 0; i < this.users.length; i++) {
+      if (this.users[i].username === this.turn) {
+        user = this.users[i]
+      }
+    }   
+    if(user["username"] !== this.currentUser["user"]){
+      return;
+    }
+        this.handleDraftDB(this.golfers[0], user)
       }
     }, 1000);
   }
@@ -294,7 +302,6 @@ export class GolferDetailsComponent implements OnInit {
       });
     } else {
       activeUser = u;
-      console.log(activeUser)
       this.activeUsersSer.postActiveUser(activeUser, "").subscribe(data => {
         this.userDetailsUpdate.emit(data)
         this.getActiveUserFromDB();
@@ -388,7 +395,7 @@ export class GolferDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.currentUser)
+    
 
     this.spinner.show();
     this.getGolfersFromDB()
