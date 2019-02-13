@@ -14,7 +14,7 @@ import { Ng4LoadingSpinnerModule } from 'ng4-loading-spinner';
 import { LoginService } from '../app/services/login-service/login.service';
 import { LoginComponent } from "./auth/login/login.component";
 import { RegisterComponent } from "./auth/register/register.component";
-import { RegisterService } from "./services/register-service/register.service";
+import { RegisterService } from "./services/register-service/register.service"; 
 import { UserDetailsComponent } from "./components/user-details/user-details.component";
 import { GolferDetailsComponent } from './components/golfer-details/golfer-details.component';
 import { WarningModalComponent } from './components/warning-modal/warning-modal.component';
@@ -22,10 +22,7 @@ import { MessageComponent } from './components/message/message.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ChatComponent } from './components/chat/chat.component';
 import { DraftCompleteComponent } from './draft-complete/draft-complete.component';
-
-
-
-
+import { AuthGuard } from "./auth.guard"
 
 
 @NgModule({
@@ -52,7 +49,7 @@ import { DraftCompleteComponent } from './draft-complete/draft-complete.componen
     Ng4LoadingSpinnerModule.forRoot(),
     BrowserAnimationsModule
   ],
-  providers: [PostService, GolfersService, LoginService, RegisterService],
+  providers: [PostService, GolfersService, LoginService, RegisterService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

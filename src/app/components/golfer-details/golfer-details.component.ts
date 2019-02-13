@@ -6,6 +6,7 @@ import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { WarningModalComponent } from "../warning-modal/warning-modal.component";
 import * as socketIo from "socket.io-client";
 import { ActiveUsersService } from "../../services/active-users-service/active-users.service";
+
 import {
   trigger,
   style,
@@ -13,6 +14,8 @@ import {
   transition,
   // ...
 } from '@angular/animations';
+import { AuthGuard } from 'src/app/auth.guard';
+
 
 @Component({
   selector: 'app-golfer-details',
@@ -56,8 +59,13 @@ export class GolferDetailsComponent implements OnInit {
     public golfSer: GolfersService,
     private modalService: NgbModal,
     private spinner: Ng4LoadingSpinnerService,
-    private activeUsersSer: ActiveUsersService) {
+    private activeUsersSer: ActiveUsersService,
+    private auth: AuthGuard
+    ) {
 
+      if(this.currentUser){
+        this.activeUsersSer.loggedInStatus = true
+      }
 
     this.counter = 60;
 
@@ -71,7 +79,7 @@ export class GolferDetailsComponent implements OnInit {
     this.golfSer.getGolfers()
       .subscribe(data => {
         let golfers = []
-        for (let i = 0; i < 10; i++) {
+        for (let i = 0; i < 200; i++) {
           golfers.push(data[i])
         }
         console.log(golfers)
@@ -380,6 +388,7 @@ export class GolferDetailsComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.currentUser)
 
     this.spinner.show();
     this.getGolfersFromDB()
@@ -391,6 +400,8 @@ export class GolferDetailsComponent implements OnInit {
     this.socket.on("initiate", (data) => {
       this.activeUser(data["data"]["data"])
     })
+
+    this.auth.canActivate(this.currentUser, this.currentUser)
   }
 
 }

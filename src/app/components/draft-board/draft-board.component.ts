@@ -71,8 +71,6 @@ export class DraftBoardComponent implements OnInit {
     this.activeUsersSer.getAllActiveUsers()
       .subscribe((data) => {
         this.users = data["data"]
-        // this.currentUser = data["data"][data["data"].length - 1]["username"]
-        // this.messageService.userSignedInMessage(this.currentUser)
       })
   }
 

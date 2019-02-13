@@ -9,6 +9,8 @@ import { MessageService } from "../message-service/message.service";
 })
 export class ActiveUsersService {
 
+  public loggedInStatus: boolean=false;
+
   constructor(
     private http: HttpClient,
     private messageService: MessageService) { }
@@ -40,6 +42,10 @@ export class ActiveUsersService {
     return this.http.get("http://localhost:3010/user/get-active-user").pipe(
       catchError(this.handleError('Post Active User', []))
     );
+  }
+
+  setLoggedIn(value){
+    return value
   }
 
 

@@ -1,6 +1,9 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { LoginService } from "../../services/login-service/login.service";
+import { ActiveUsersService } from "src/app/services/active-users-service/active-users.service";
+import { AuthGuard } from "src/app/auth.guard";
+import { query } from "@angular/animations";
 
 @Component({
     selector: 'app-login',
@@ -14,10 +17,13 @@ export class LoginComponent {
     errMessage: any;
     loginError: boolean=false;
     successMessage: any;
+    transfer: any;
 
     constructor(
         public router: Router,
-        public loginServ: LoginService) { }
+        public loginServ: LoginService,
+        public activeUser: ActiveUsersService,
+        public auth: AuthGuard) { }
 
 
     loginUser(u, p) {
@@ -37,6 +43,9 @@ export class LoginComponent {
           }
           this.successMessage = res["message"]
           console.log(res)
+          this.transfer = res;
+          console.log(this.transfer)
+          this.auth.canActivate(this.transfer , this.transfer)
           this.router.navigate(["draft-board"], {queryParams: res})
         }
           
