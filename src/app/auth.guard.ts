@@ -12,15 +12,16 @@ import { ActiveUsersService } from './services/active-users-service/active-users
 export class AuthGuard implements CanActivate {
 
 constructor(private activeUser: ActiveUsersService){
-    console.log()
+
 }
 
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-      console.log(next)
-     if(next["queryParams"]["token"]){
+     console.log(next)
+     let access = next["token"] ? next["token"] : next["queryParams"]["token"]
+     if(access){
        return true;
      } 
      return false;
