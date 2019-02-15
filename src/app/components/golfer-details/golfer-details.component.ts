@@ -41,6 +41,7 @@ export class GolferDetailsComponent implements OnInit {
   golfers: any = {}
   socket = socketIo("http://localhost:3010");
   complete: boolean=false;
+  preDraft: boolean=true
 
 
 
@@ -79,15 +80,12 @@ export class GolferDetailsComponent implements OnInit {
     this.golfSer.getGolfers()
       .subscribe(data => {
         let golfers = []
+        console.log(data)
         for (let i = 0; i < 200; i++) {
           golfers.push(data[i])
         }
         this.postToGolfersDB(golfers);
         this.postActiveUser("", "init");
-        this.golfers = golfers;
-        this.spinner.hide();
-        this.setCounter();
-        this.initGolfers();
         
       })
   }
@@ -105,18 +103,33 @@ export class GolferDetailsComponent implements OnInit {
             }
           })
         } else {
+          if(this.users.length === 8){
+            this.socket.emit("beginDraft")
+          }
           this.golfers = data["data"]
+          console.log(this.golfers)
           this.spinner.hide()
           this.getTurn()
-          this.setCounter()
           this.initGolfers()
           this.getActiveUserFromDB()
         }
       })
   }
 
+  beginDraft(){
+    this.preDraft = false;
+    this.setCounter();
+  }
+
+
+
   postToGolfersDB(data) {
     this.golfSer.postGolfers(data).subscribe(data => {
+      this.golfers = data["data"]
+      console.log(this.golfers)
+      this.spinner.hide();
+      this.initGolfers();
+      
     })
   }
 
@@ -144,6 +157,11 @@ export class GolferDetailsComponent implements OnInit {
   }
 
   openModal(g) {
+    
+    if(this.preDraft){
+      return;
+    }
+    
     let user;
 
     
@@ -169,6 +187,7 @@ export class GolferDetailsComponent implements OnInit {
   }
 
   handleDraftDB(g, user) {
+    console.log(g)
     this.post.getTurn().subscribe((data) => {
       this.ascFlag = data["data"][0]["turn"]
       this.removeGolferFromDB(g);
@@ -226,6 +245,7 @@ export class GolferDetailsComponent implements OnInit {
 
 
   draftGolfer(g, u) {
+    console.log(g, u)
     this.counter = 60;
     this.removeGolferFromArray(g);
     let golfDraftObj = {
@@ -248,7 +268,9 @@ export class GolferDetailsComponent implements OnInit {
   removeGolferFromArray(g) {
     this.golfers.filter((u, i) => {
       let golferIndex;
+      console.log(g, u)
       if (JSON.stringify(g) === JSON.stringify(u)) {
+        console.log(g, u)
         golferIndex = i;
         this.golfers.splice(golferIndex, 1)
       }
@@ -313,7 +335,6 @@ export class GolferDetailsComponent implements OnInit {
 
   initGolfers() {
     let iter = this.golfers.length > 26 ? 26 : this.golfers.length
-
     for (var i = 0; i < iter; i++) {
       this.displayedGolfers.push(this.golfers[i])
     }
@@ -396,16 +417,22 @@ export class GolferDetailsComponent implements OnInit {
 
   ngOnInit() {
     
+    console.log(this.golfers)
 
     this.spinner.show();
     this.getGolfersFromDB()
 
     this.socket.emit("newConnection", { data: this.currentUser });
     this.socket.on("golferDrafted", (data) => {
+      console.log(data["data"]["golfer"], data["data"]["username"])
       this.draftGolfer(data["data"]["golfer"], data["data"]["username"])
     });
     this.socket.on("initiate", (data) => {
       this.activeUser(data["data"]["data"])
+    })
+
+    this.socket.on("begin", () => {
+      this.beginDraft()
     })
 
     this.auth.canActivate(this.currentUser, this.currentUser)
