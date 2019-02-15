@@ -28,7 +28,7 @@ import {
 export class MessageComponent implements OnInit {
 
 
-  constructor(private messageService: MessageService) { }
+  constructor(public messageService: MessageService) { }
 
   ngOnInit() {
     

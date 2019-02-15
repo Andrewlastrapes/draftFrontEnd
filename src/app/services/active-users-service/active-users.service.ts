@@ -13,7 +13,7 @@ export class ActiveUsersService {
 
   constructor(
     private http: HttpClient,
-    private messageService: MessageService) { }
+    public messageService: MessageService) { }
 
   getAllActiveUsers(){
     return this.http.get("http://localhost:3010/user/get-users")

@@ -49,7 +49,7 @@ export class DraftBoardComponent implements OnInit {
     public golfSer: GolfersService,
     private activeUsersSer: ActiveUsersService,
     public loginSer: LoginService,
-    private messageService: MessageService,
+    public messageService: MessageService,
     private route: ActivatedRoute) {
 
   }
