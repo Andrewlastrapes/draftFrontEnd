@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { ActiveUsersService } from "../../services/active-users-service/active-users.service";
 import * as socketIo from "socket.io-client";
 
+
 @Component({
   selector: 'app-user-details',
   templateUrl: './user-details.component.html',
@@ -10,7 +11,7 @@ import * as socketIo from "socket.io-client";
 export class UserDetailsComponent implements OnInit {
 
   @Input() users; 
-  socket = socketIo("http://localhost:3010");
+  socket = socketIo("https://stormy-hollows-91406.herokuapp.com");
   
   constructor(private activeUsersSer: ActiveUsersService) {
     

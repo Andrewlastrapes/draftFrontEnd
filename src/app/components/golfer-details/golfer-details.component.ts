@@ -7,6 +7,7 @@ import { WarningModalComponent } from "../warning-modal/warning-modal.component"
 import * as socketIo from "socket.io-client";
 import { ActiveUsersService } from "../../services/active-users-service/active-users.service";
 
+
 import {
   trigger,
   style,
@@ -39,7 +40,7 @@ export class GolferDetailsComponent implements OnInit {
   ascFlag: boolean
   displayedGolfers: any = [];
   golfers: any = {}
-  socket = socketIo("http://localhost:3010");
+  socket = socketIo("https://stormy-hollows-91406.herokuapp.com");
   complete: boolean=false;
   preDraft: boolean=true
 

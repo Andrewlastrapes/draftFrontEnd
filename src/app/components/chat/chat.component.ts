@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import * as socketIo from "socket.io-client";
 
 
+
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
@@ -14,7 +15,7 @@ export class ChatComponent implements OnInit {
   chatInput: any;
   username: string;
   chatArray = [];
-  socket = socketIo("http://localhost:3010");
+  socket = socketIo("https://stormy-hollows-91406.herokuapp.com");
   outputName: any;
 
   
