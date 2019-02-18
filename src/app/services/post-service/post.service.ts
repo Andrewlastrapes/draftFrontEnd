@@ -19,7 +19,7 @@ export class PostService {
       golfer: golfer
     }  
 
-    return this.http.post("http://localhost:3010/post", payload)
+    return this.http.post("https://stormy-hollows-91406.herokuapp.com/post", payload)
     .pipe(
       tap(_ => this.log()),
       catchError(this.handleError('addGolferUser'))
@@ -28,7 +28,7 @@ export class PostService {
   }
 
   postActiveUser(u){
-    return this.http.post("http://localhost:3010/post/update-active", u).pipe(
+    return this.http.post("https://stormy-hollows-91406.herokuapp.com/post/update-active", u).pipe(
       tap(_ => this.log()),
       catchError(this.handleError('updatedActiveUser'))
     )
@@ -38,14 +38,14 @@ export class PostService {
     let payload = {
       b: bool
     }
-    return this.http.post("http://localhost:3010/post/update-turn", payload).pipe(
+    return this.http.post("https://stormy-hollows-91406.herokuapp.com/post/update-turn", payload).pipe(
       tap(_ => this.log()),
       catchError(this.handleError('updateTurn'))
     )
   }
 
   initiateTurn(){
-    return this.http.post("http://localhost:3010/post/initate-turn", "").pipe(
+    return this.http.post("https://stormy-hollows-91406.herokuapp.com/post/initate-turn", "").pipe(
       tap(_ => this.log()),
       catchError(this.handleError('initiate-turn'))
     )
@@ -54,24 +54,24 @@ export class PostService {
   
 
   getUsers(){
-    return this.http.get("http://localhost:3010/user/register")
+    return this.http.get("https://stormy-hollows-91406.herokuapp.com/user/register")
   }
 
   getTurn(){
     console.log("In get turn")
-    return this.http.get("http://localhost:3010/post/get-turn")
+    return this.http.get("https://stormy-hollows-91406.herokuapp.com/post/get-turn")
   }
 
   draftComplete(){
-    return this.http.post("http://localhost:3010/post/draft-completed", true)
+    return this.http.post("https://stormy-hollows-91406.herokuapp.com/post/draft-completed", true)
   }
 
   getDraftComplete(){
-    return this.http.get("http://localhost:3010/post/draft-completed")
+    return this.http.get("https://stormy-hollows-91406.herokuapp.com/post/draft-completed")
   }
 
   draftStart(){
-    return this.http.post("http://localhost:3010/post/draft-started", "")
+    return this.http.post("https://stormy-hollows-91406.herokuapp.com/post/draft-started", "")
   }
 
   private handleError<T> (operation = 'operation', result?: T) {

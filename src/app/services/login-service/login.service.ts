@@ -17,14 +17,14 @@ export class LoginService {
       username: username,
       password: password
     }
-      return this.http.post("http://localhost:3010/user/login", enteredData).toPromise();
+      return this.http.post("https://stormy-hollows-91406.herokuapp.com/user/login", enteredData).toPromise();
     }
 
     signOut(username){
       let data = {
         username: username
       }
-      return this.http.post("http://localhost:3010/user/sign-out", data).pipe(
+      return this.http.post("https://stormy-hollows-91406.herokuapp.com/user/sign-out", data).pipe(
         tap(_ => this.log()),
         catchError(this.handleError('initiate-turn'))
       )

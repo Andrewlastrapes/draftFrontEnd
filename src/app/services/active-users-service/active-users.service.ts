@@ -16,7 +16,7 @@ export class ActiveUsersService {
     public messageService: MessageService) { }
 
   getAllActiveUsers(){
-    return this.http.get("http://localhost:3010/user/get-users")
+    return this.http.get("https://stormy-hollows-91406.herokuapp.com/user/get-users")
     .pipe(
       catchError(this.handleError('Get Signed-in Users', []))
     );
@@ -27,19 +27,19 @@ export class ActiveUsersService {
   postActiveUser(u, type){
     console.log("in post active service")
     if(type === "init"){
-      return this.http.post("http://localhost:3010/user/set-initial-user", u).pipe(
+      return this.http.post("https://stormy-hollows-91406.herokuapp.com/user/set-initial-user", u).pipe(
         catchError(this.handleError('Post Active User', []))
       );
     } else {
       console.log(u)
-      return this.http.post("http://localhost:3010/user/set-active-user", u).pipe(
+      return this.http.post("https://stormy-hollows-91406.herokuapp.com/user/set-active-user", u).pipe(
       catchError(this.handleError('Post Active User', []))
     );
     }
   } 
 
   getActiveUser(){
-    return this.http.get("http://localhost:3010/user/get-active-user").pipe(
+    return this.http.get("https://stormy-hollows-91406.herokuapp.com/get-active-user").pipe(
       catchError(this.handleError('Post Active User', []))
     );
   }

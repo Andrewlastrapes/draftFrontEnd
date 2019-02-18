@@ -28,16 +28,16 @@ export class GolfersService {
 
   postGolfers(golfers){
     console.log(golfers)
-    return this.http.post("http://localhost:3010/golfers/post", golfers)
+    return this.http.post("https://stormy-hollows-91406.herokuapp.com/golfers/post", golfers)
   }
 
   returnGolfers(){
-    return this.http.get("http://localhost:3010/golfers/post")
+    return this.http.get("https://stormy-hollows-91406.herokuapp.com/golfers/post")
   }
 
   removeDraftedGolfer(golfer){
     console.log(golfer)
-    return this.http.post("http://localhost:3010/golfers/remove-drafted", golfer)
+    return this.http.post("https://stormy-hollows-91406.herokuapp.com/golfers/remove-drafted", golfer)
   }
 
 
