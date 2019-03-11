@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ActiveUsersService } from "../../services/active-users-service/active-users.service";
 import * as socketIo from "socket.io-client";
+import { environment } from "../../../environments/environment"
 
 
 @Component({
@@ -9,9 +10,9 @@ import * as socketIo from "socket.io-client";
   styleUrls: ['./user-details.component.scss']
 })
 export class UserDetailsComponent implements OnInit {
-
+  baseUrl = environment.baseUrl
   @Input() users; 
-  socket = socketIo("https://stormy-hollows-91406.herokuapp.com");
+  socket = socketIo(this.baseUrl);
   
   constructor(private activeUsersSer: ActiveUsersService) {
     

@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { MessageService } from "../message-service/message.service";
+import { environment } from "../../../environments/environment"
 
 @Injectable()
 export class LoginService {
@@ -11,20 +12,21 @@ export class LoginService {
               private http: HttpClient,
               public messageService: MessageService) { }
   data: any = {}
+  baseUrl = environment.baseUrl
 
   login(username, password){
     let enteredData = {
       username: username,
       password: password
     }
-      return this.http.post("https://stormy-hollows-91406.herokuapp.com/user/login", enteredData).toPromise();
+      return this.http.post(this.baseUrl + "/user/login", enteredData).toPromise();
     }
 
     signOut(username){
       let data = {
         username: username
       }
-      return this.http.post("https://stormy-hollows-91406.herokuapp.com/user/sign-out", data).pipe(
+      return this.http.post(this.baseUrl + "/user/sign-out", data).pipe(
         tap(_ => this.log()),
         catchError(this.handleError('initiate-turn'))
       )

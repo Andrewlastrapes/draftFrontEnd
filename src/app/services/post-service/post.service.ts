@@ -2,11 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { MessageService } from "../message-service/message.service";
- 
+import { environment } from "../../../environments/environment"
 import { Observable, of } from 'rxjs';
 
 @Injectable()
 export class PostService {
+  baseUrl = environment.baseUrl;
 
   constructor(
     private http: HttpClient,
@@ -19,7 +20,7 @@ export class PostService {
       golfer: golfer
     }  
 
-    return this.http.post("https://stormy-hollows-91406.herokuapp.com/post", payload)
+    return this.http.post(this.baseUrl + "/post", payload)
     .pipe(
       tap(_ => this.log()),
       catchError(this.handleError('addGolferUser'))
@@ -28,7 +29,7 @@ export class PostService {
   }
 
   postActiveUser(u){
-    return this.http.post("https://stormy-hollows-91406.herokuapp.com/post/update-active", u).pipe(
+    return this.http.post(this.baseUrl + "/post/update-active", u).pipe(
       tap(_ => this.log()),
       catchError(this.handleError('updatedActiveUser'))
     )
@@ -38,14 +39,14 @@ export class PostService {
     let payload = {
       b: bool
     }
-    return this.http.post("https://stormy-hollows-91406.herokuapp.com/post/update-turn", payload).pipe(
+    return this.http.post(this.baseUrl + "/post/update-turn", payload).pipe(
       tap(_ => this.log()),
       catchError(this.handleError('updateTurn'))
     )
   }
 
   initiateTurn(){
-    return this.http.post("https://stormy-hollows-91406.herokuapp.com/post/initate-turn", "").pipe(
+    return this.http.post(this.baseUrl + "/post/initate-turn", "").pipe(
       tap(_ => this.log()),
       catchError(this.handleError('initiate-turn'))
     )
@@ -54,24 +55,24 @@ export class PostService {
   
 
   getUsers(){
-    return this.http.get("https://stormy-hollows-91406.herokuapp.com/user/register")
+    return this.http.get(this.baseUrl + "/user/register")
   }
 
   getTurn(){
     console.log("In get turn")
-    return this.http.get("https://stormy-hollows-91406.herokuapp.com/post/get-turn")
+    return this.http.get(this.baseUrl + "/post/get-turn")
   }
 
   draftComplete(){
-    return this.http.post("https://stormy-hollows-91406.herokuapp.com/post/draft-completed", true)
+    return this.http.post(this.baseUrl + "/post/draft-completed", true)
   }
 
   getDraftComplete(){
-    return this.http.get("https://stormy-hollows-91406.herokuapp.com/post/draft-completed")
+    return this.http.get(this.baseUrl + "/post/draft-completed")
   }
 
   draftStart(){
-    return this.http.post("https://stormy-hollows-91406.herokuapp.com/post/draft-started", "")
+    return this.http.post(this.baseUrl + "/post/draft-started", "")
   }
 
   private handleError<T> (operation = 'operation', result?: T) {

@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { LoginService } from "../../services/login-service/login.service";
 import { ActiveUsersService } from "src/app/services/active-users-service/active-users.service";
 import { AuthGuard } from "src/app/auth.guard";
-import { query } from "@angular/animations";
+
 
 @Component({
     selector: 'app-login',

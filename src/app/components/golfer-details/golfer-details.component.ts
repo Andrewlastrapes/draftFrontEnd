@@ -6,6 +6,7 @@ import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 import { WarningModalComponent } from "../warning-modal/warning-modal.component";
 import * as socketIo from "socket.io-client";
 import { ActiveUsersService } from "../../services/active-users-service/active-users.service";
+import { environment } from "../../../environments/environment"
 
 
 import {
@@ -36,11 +37,12 @@ import { AuthGuard } from 'src/app/auth.guard';
   styleUrls: ['./golfer-details.component.scss']
 })
 export class GolferDetailsComponent implements OnInit {
+  baseUrl = environment.baseUrl
   counter: number;
   ascFlag: boolean
   displayedGolfers: any = [];
   golfers: any = {}
-  socket = socketIo("https://stormy-hollows-91406.herokuapp.com");
+  socket = socketIo(this.baseUrl);
   complete: boolean=false;
   preDraft: boolean=true
 
@@ -258,6 +260,7 @@ export class GolferDetailsComponent implements OnInit {
 
   getActiveUserFromDB() {
     this.activeUsersSer.getActiveUser().subscribe(data => {
+      console.log(data)
       this.socket.emit("initialActiveUser", {
         data: data["data"]["username"]
       });
@@ -320,6 +323,7 @@ export class GolferDetailsComponent implements OnInit {
     let activeUser;
     if (type === "init") {
       activeUser = this.users[0];
+      console.log(activeUser)
       this.activeUsersSer.postActiveUser(activeUser, "init").subscribe(data => {
         this.getActiveUserFromDB();
       });
@@ -418,17 +422,18 @@ export class GolferDetailsComponent implements OnInit {
 
   ngOnInit() {
     
-    console.log(this.golfers)
+ 
 
     this.spinner.show();
     this.getGolfersFromDB()
 
     this.socket.emit("newConnection", { data: this.currentUser });
     this.socket.on("golferDrafted", (data) => {
-      console.log(data["data"]["golfer"], data["data"]["username"])
+
       this.draftGolfer(data["data"]["golfer"], data["data"]["username"])
     });
     this.socket.on("initiate", (data) => {
+
       this.activeUser(data["data"]["data"])
     })
 

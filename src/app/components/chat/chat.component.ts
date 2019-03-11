@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import * as socketIo from "socket.io-client";
+import { environment } from "../../../environments/environment"
 
 
 
@@ -10,12 +11,13 @@ import * as socketIo from "socket.io-client";
 })
 export class ChatComponent implements OnInit {
 
+  baseUrl = environment.baseUrl
   @Input() users;
   @Input() user;
   chatInput: any;
   username: string;
   chatArray = [];
-  socket = socketIo("https://stormy-hollows-91406.herokuapp.com");
+  socket = socketIo(this.baseUrl);
   outputName: any;
 
   

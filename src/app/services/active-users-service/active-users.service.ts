@@ -3,12 +3,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { MessageService } from "../message-service/message.service";
+import { environment } from "../../../environments/environment"
 
 @Injectable({
   providedIn: 'root'
 })
 export class ActiveUsersService {
 
+  baseUrl = environment.baseUrl
   public loggedInStatus: boolean=false;
 
   constructor(
@@ -16,7 +18,7 @@ export class ActiveUsersService {
     public messageService: MessageService) { }
 
   getAllActiveUsers(){
-    return this.http.get("https://stormy-hollows-91406.herokuapp.com/user/get-users")
+    return this.http.get(this.baseUrl + "/user/get-users")
     .pipe(
       catchError(this.handleError('Get Signed-in Users', []))
     );
@@ -27,19 +29,19 @@ export class ActiveUsersService {
   postActiveUser(u, type){
     console.log("in post active service")
     if(type === "init"){
-      return this.http.post("https://stormy-hollows-91406.herokuapp.com/user/set-initial-user", u).pipe(
+      return this.http.post(this.baseUrl + "/user/set-initial-user", u).pipe(
         catchError(this.handleError('Post Active User', []))
       );
     } else {
       console.log(u)
-      return this.http.post("https://stormy-hollows-91406.herokuapp.com/user/set-active-user", u).pipe(
+      return this.http.post(this.baseUrl + "/user/set-active-user", u).pipe(
       catchError(this.handleError('Post Active User', []))
     );
     }
   } 
 
   getActiveUser(){
-    return this.http.get("https://stormy-hollows-91406.herokuapp.com/get-active-user").pipe(
+    return this.http.get(this.baseUrl + "/user/get-active-user").pipe(
       catchError(this.handleError('Post Active User', []))
     );
   }

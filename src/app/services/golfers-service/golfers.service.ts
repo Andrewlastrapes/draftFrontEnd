@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
+import { environment } from "../../../environments/environment"
 
 
 
 @Injectable()
 export class GolfersService {
   
+  baseUrl = environment.baseUrl
 
   constructor(private http: HttpClient) { }
 
@@ -27,17 +29,15 @@ export class GolfersService {
 
 
   postGolfers(golfers){
-    console.log(golfers)
-    return this.http.post("https://stormy-hollows-91406.herokuapp.com/golfers/post", golfers)
+    return this.http.post(this.baseUrl + "/golfers/post", golfers)
   }
 
   returnGolfers(){
-    return this.http.get("https://stormy-hollows-91406.herokuapp.com/golfers/post")
+    return this.http.get(this.baseUrl + "/golfers/post")
   }
 
   removeDraftedGolfer(golfer){
-    console.log(golfer)
-    return this.http.post("https://stormy-hollows-91406.herokuapp.com/golfers/remove-drafted", golfer)
+    return this.http.post(this.baseUrl + "/golfers/remove-drafted", golfer)
   }
 
 

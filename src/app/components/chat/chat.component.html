@@ -1,8 +1,10 @@
 
   <div class="card" style="height: 18rem;">
-    <p class="card-text text-center"><small class="text-muted">Chatroom: {{users.length}} current users</small></p>
-    <div *ngFor="let c of chatArray">
-        <div class="userAndMessage"><span class="username">{{c.user}}</span>: {{c.message}}</div>
+    <div style="overflow-y: scroll">
+        <p class="card-text text-center"><small class="text-muted">Chatroom: {{users.length}} current users</small></p>
+        <div *ngFor="let c of chatArray" >
+            <div class="userAndMessage"><span class="username">{{c.user}}</span>: {{c.message}}</div>
+        </div>
     </div>
   </div>
 

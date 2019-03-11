@@ -1,16 +1,19 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from '@angular/common/http';
+import { environment } from "../../../environments/environment"
 
 @Injectable()
 export class RegisterService{
-    constructor(public http: HttpClient){}
+    baseUrl = environment.baseUrl
 
+    constructor(public http: HttpClient){}
+    
     registerUserService(username, password){
         let userData = {
             username: username,
             password: password
         }
-       return this.http.post("https://stormy-hollows-91406.herokuapp.com/user/register", userData).toPromise()
+       return this.http.post(this.baseUrl + "/user/register", userData).toPromise()
     }
 
 }
