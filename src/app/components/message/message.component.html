@@ -4,10 +4,10 @@
 
   <div class="container">
     <div class="row">
-      <div class="col-4" *ngIf="messageService.messages.length > 0" @myInsertRemoveTrigger>
+      <div class="col-6" *ngIf="messageService.messages.length > 0" @myInsertRemoveTrigger>
           <ngb-alert type="danger" [dismissible]="false">{{messageService.messages[0]}}</ngb-alert>
       </div>
-      <div class="col-4" *ngIf="messageService.messages.length > 1" @myInsertRemoveTrigger>
+      <div class="col-6" *ngIf="messageService.messages.length > 1" @myInsertRemoveTrigger>
           <ngb-alert type="danger" [dismissible]="false">{{messageService.messages[1]}}</ngb-alert>
         </div>
     </div>

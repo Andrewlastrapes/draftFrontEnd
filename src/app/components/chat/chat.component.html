@@ -1,5 +1,5 @@
 
-  <div class="card" style="height: 18rem;">
+  <div class="card bgcolor" style="height: 18rem;">
     <div style="overflow-y: scroll">
         <p class="card-text text-center"><small class="text-muted">Chatroom: {{users.length}} current users</small></p>
         <div *ngFor="let c of chatArray" >
@@ -8,6 +8,6 @@
     </div>
   </div>
 
-<div class="card">
+<div class="card bgcolor">
   <input type="text" (keyup.enter)="submitMessage()" placeholder="Hit enter to send.." [(ngModel)]="chatInput">
 </div>

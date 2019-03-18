@@ -1,6 +1,7 @@
 
 <div class="page-header list-group-item list-group-item-action list-group-item-success" *ngIf="!complete">
    <p class="text-muted" *ngIf="preDraft">Draft will begin once 8th player enters.</p>
+   <p class="text-muted" *ngIf="!preDraft">Click player below to draft</p>
   <div class="row">
     <div class="col-9">
       <h1><small>Turn: </small>{{turn}}</h1>
@@ -17,7 +18,7 @@
 <div *ngIf="!complete">
 <ul class="list-group" *ngFor="let g of displayedGolfers; let i = index" (click)="openModal(g)">
   <li class="list-group-item" @myInsertRemoveTrigger>
-    <div class="row">
+    <div class="row bgcolor">
       <div class="col-6">
         <h6>{{g.Name}}</h6>
       </div>
