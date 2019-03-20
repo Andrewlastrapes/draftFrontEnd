@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { LoginService } from "../../services/login-service/login.service";
 import { ActiveUsersService } from "src/app/services/active-users-service/active-users.service";
@@ -18,6 +18,7 @@ export class LoginComponent {
     loginError: boolean=false;
     successMessage: any;
     transfer: any;
+    activeUsers: any;
 
     constructor(
         public router: Router,
@@ -26,20 +27,34 @@ export class LoginComponent {
         public auth: AuthGuard) { }
 
 
+    numberOfActiveUsers(){
+        this.activeUser.getAllActiveUsers().subscribe(data => {
+            this.activeUsers = data
+        })
+    }
+
+
     loginUser(u, p) {
+        console.log(this.activeUsers["data"].length)
 
         if(!u || !p){
             this.loginError = true;
             this.errMessage = "Please enter username and password";
             return;
-        }
+        }   
 
         this.loginServ.login(u, p).then(res => {
           if(!res["token"]){
             this.loginError = true;
             this.errMessage = "username/password incorrect"
             console.log(this.errMessage)
+            console.log(res)
             return;
+          }
+          if(this.activeUsers["data"].length > 8){
+              this.loginError = true;
+              this.errMessage = "Sorry, the draft has already begun"
+              return;
           }
           this.successMessage = res["message"]
           this.transfer = res;
@@ -55,6 +70,7 @@ export class LoginComponent {
 
 
     ngOnInit() {
+        this.numberOfActiveUsers()
     }
 
 }
